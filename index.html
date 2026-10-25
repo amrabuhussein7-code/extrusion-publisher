@@ -1,1053 +1,862 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ExtrusionPedia Social Publisher</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ep: {
+              navy: '#0B1F3A',
+              blue: '#1261A0',
+              cyan: '#16B9E8',
+              white: '#FFFFFF',
+              gray: '#F3F6F9',
+              dark: '#263238'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    :root {
-      --navy: #0B1F3A;
-      --navy-light: #162B4D;
-      --industrial-blue: #1261A0;
-      --cyan: #16B9E8;
-      --white: #FFFFFF;
-      --light-gray: #F3F6F9;
-      --border-color: #E2E8F0;
-      --dark-text: #263238;
-      --muted-text: #64748B;
-      --success: #10B981;
-      --warning: #F59E0B;
-      --danger: #EF4444;
-      --font-main: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: var(--font-main);
-      background-color: var(--light-gray);
-      color: var(--dark-text);
-      line-height: 1.5;
-      padding-bottom: 80px;
-    }
-
-    header {
-      background-color: var(--navy);
-      color: var(--white);
-      padding: 16px 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 16px rgba(11, 31, 58, 0.2);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-      color: var(--white);
-    }
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      background: linear-gradient(135deg, var(--cyan), var(--industrial-blue));
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--navy);
-      box-shadow: 0 2px 8px rgba(22, 185, 232, 0.3);
-    }
-    .brand-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-    .brand-title span { color: var(--cyan); }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .btn-header {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: var(--white);
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .btn-header:hover { background: rgba(255, 255, 255, 0.2); }
-
-    .container {
-      max-width: 980px;
-      margin: 32px auto;
-      padding: 0 20px;
-    }
-
-    .card {
-      background: var(--white);
-      border-radius: 14px;
-      border: 1px solid var(--border-color);
-      padding: 28px;
-      margin-bottom: 28px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      position: relative;
-    }
-
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .card-title-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .step-badge {
-      background: var(--navy);
-      color: var(--cyan);
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      font-weight: 800;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-    input[type="text"], input[type="url"], textarea {
-      width: 100%;
-      padding: 13px 18px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 1rem;
-      font-family: inherit;
-      color: var(--dark-text);
-      background: #FAFCFE;
-      transition: all 0.2s;
-    }
-    input[type="text"]:focus, input[type="url"]:focus, textarea:focus {
-      outline: none;
-      border-color: var(--industrial-blue);
-      background: var(--white);
-      box-shadow: 0 0 0 3px rgba(18, 97, 160, 0.12);
-    }
-    .btn-primary {
-      background: linear-gradient(135deg, var(--industrial-blue), var(--navy));
-      color: var(--white);
-      border: none;
-      padding: 13px 26px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 1rem;
-      cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 12px rgba(18, 97, 160, 0.25);
-    }
-    .btn-primary:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(18, 97, 160, 0.35);
-    }
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    .manual-toggle-btn {
-      font-size: 0.88rem;
-      color: var(--industrial-blue);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      text-decoration: underline;
-      padding: 4px 0;
-    }
-
-    .checklist-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 10px;
-      background: #F8FAFC;
-      padding: 16px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      margin-top: 16px;
-    }
-    .check-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--muted-text);
-    }
-    .check-item.done {
-      color: var(--success);
-    }
-    .check-icon {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 1.5px solid currentColor;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-    }
-
-    .meta-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      background: #F8FAFC;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 16px;
-    }
-    .meta-box {
-      font-size: 0.92rem;
-    }
-    .meta-label {
-      font-weight: 700;
-      color: var(--muted-text);
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-    .meta-val {
-      color: var(--navy);
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .visual-container {
-      background: #06111E;
-      border-radius: 12px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 18px;
-    }
-    .canvas-holder {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      background: #000;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-    #promoCanvas {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-    .crop-selector {
-      display: flex;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 4px;
-      border-radius: 8px;
-    }
-    .crop-btn {
-      background: transparent;
-      color: var(--white);
-      border: none;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .crop-btn.active {
-      background: var(--cyan);
-      color: var(--navy);
-    }
-    .visual-toolbar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      width: 100%;
-    }
-
-    .platform-card {
-      border-left: 6px solid var(--industrial-blue);
-      margin-bottom: 24px;
-      transition: border-color 0.2s;
-    }
-    .platform-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 14px;
-    }
-    .platform-identity {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .platform-badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--white);
-    }
-    .platform-name {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--navy);
-    }
-    .platform-counter {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: #EDF2F7;
-      color: var(--muted-text);
-      font-weight: 600;
-    }
-    .platform-counter.warning {
-      background: #FEF3C7;
-      color: var(--warning);
-    }
-    .platform-counter.danger {
-      background: #FEE2E2;
-      color: var(--danger);
-    }
-    .caption-editor {
-      width: 100%;
-      min-height: 160px;
-      line-height: 1.6;
-      font-size: 0.98rem;
-      margin-bottom: 16px;
-    }
-    .platform-note {
-      background: #FFFBEB;
-      border-left: 4px solid #F59E0B;
-      padding: 10px 14px;
-      font-size: 0.85rem;
-      color: #92400E;
-      border-radius: 0 8px 8px 0;
-      margin-bottom: 16px;
-    }
-    .platform-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn-action {
-      background: #F1F5F9;
-      color: var(--navy);
-      border: 1px solid #CBD5E1;
-      padding: 9px 16px;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s ease;
-    }
-    .btn-action:hover {
-      background: #E2E8F0;
-      border-color: #94A3B8;
-    }
-    .btn-open-platform {
-      background: var(--navy);
-      color: var(--white);
-      border: none;
-    }
-    .btn-open-platform:hover {
-      background: var(--industrial-blue);
-    }
-    .btn-published-toggle {
-      margin-left: auto;
-      border: 1.5px solid #CBD5E1;
-      background: transparent;
-      color: var(--muted-text);
-    }
-    .btn-published-toggle.is-published {
-      background: var(--success);
-      color: var(--white);
-      border-color: var(--success);
-    }
-
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(11, 31, 58, 0.7);
-      backdrop-filter: blur(4px);
-      z-index: 100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .modal-backdrop.open { display: flex; }
-    .modal-box {
-      background: var(--white);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 600px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 30px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-    }
-    .modal-title {
-      font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .close-modal-btn {
-      background: none;
-      border: none;
-      font-size: 24px;
-      cursor: pointer;
-      color: var(--muted-text);
-    }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-    .form-group small {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--muted-text);
-      margin-top: 4px;
-    }
-
-    .saved-campaigns-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      max-height: 380px;
-      overflow-y: auto;
-    }
-    .saved-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 16px;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      background: #F8FAFC;
-    }
-    .saved-item-title {
-      font-weight: 700;
-      color: var(--navy);
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-    .saved-item-meta {
-      font-size: 0.8rem;
-      color: var(--muted-text);
-    }
-    .saved-item-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .toast-msg {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--navy);
-      color: var(--white);
-      padding: 14px 22px;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-      border-left: 4px solid var(--cyan);
-      transform: translateY(120px);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 200;
-    }
-    .toast-msg.visible { transform: translateY(0); }
-
-    @media (max-width: 768px) {
-      .input-group { flex-direction: column; }
-      .meta-grid { grid-template-columns: 1fr; }
-      .checklist-grid { grid-template-columns: 1fr; }
-      .platform-actions { flex-direction: column; align-items: stretch; }
-      .btn-published-toggle { margin-left: 0; }
+      background-color: #F3F6F9;
+      color: #263238;
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F3F6F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
     }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-  <header>
-    <a href="https://extrusionpedia.com" target="_blank" class="brand">
-      <div class="brand-logo">E</div>
-      <div>
-        <div class="brand-title">Extrusion<span>Pedia</span></div>
-        <div style="font-size: 0.72rem; color: var(--cyan); letter-spacing: 0.5px; font-weight: 700;">SOCIAL PUBLISHER</div>
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none px-4"></div>
+
+  <!-- Duplicate Campaign Detection Modal -->
+  <div id="duplicate-modal" class="fixed inset-0 bg-ep-navy/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+      <div class="bg-ep-navy px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-triangle-exclamation text-ep-cyan text-xl"></i>
+          <h3 class="text-white font-bold text-lg">Existing Campaign Detected</h3>
+        </div>
+        <button onclick="closeDuplicateModal()" class="text-slate-300 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
       </div>
-    </a>
-    <div class="header-actions">
-      <button class="btn-header" onclick="openCampaignHistoryModal()">📂 Saved Campaigns</button>
-      <button class="btn-header" onclick="openSettingsModal()">⚙️ Settings & Accounts</button>
+      <div class="p-6 space-y-4">
+        <p class="text-sm text-slate-600 leading-relaxed">
+          A saved campaign already exists for this normalized ExtrusionPedia URL:
+        </p>
+        <div id="duplicate-url-display" class="bg-ep-gray p-3 rounded-lg font-mono text-xs text-ep-navy break-all border border-slate-200"></div>
+        <div id="duplicate-meta-display" class="text-xs text-slate-500"></div>
+        <p class="text-sm font-medium text-ep-dark">
+          Would you like to open the existing campaign without overwriting your work, or generate a brand-new campaign?
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 pt-2">
+          <button id="btn-open-existing" class="flex-1 bg-ep-blue hover:bg-ep-navy text-white font-semibold py-2.5 px-4 rounded-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-folder-open"></i> Open Existing Campaign
+          </button>
+          <button id="btn-create-new" class="flex-1 bg-slate-100 hover:bg-slate-200 text-ep-dark font-semibold py-2.5 px-4 rounded-lg transition border border-slate-300 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-rotate"></i> Create a New Campaign
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings & Social Media Accounts Modal -->
+  <div id="settings-modal" class="fixed inset-0 bg-ep-navy/75 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 my-8">
+      <div class="bg-ep-navy px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-sliders text-ep-cyan text-xl"></i>
+          <div>
+            <h3 class="text-white font-bold text-lg">My Social Media Accounts & App Configuration</h3>
+            <p class="text-xs text-slate-300">Configure destination URLs, active platforms, and AI runtime settings</p>
+          </div>
+        </div>
+        <button onclick="closeSettingsModal()" class="text-slate-300 hover:text-white p-1">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <div class="p-6 max-h-[80vh] overflow-y-auto custom-scrollbar space-y-6">
+        <!-- Enable / Disable Platforms -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-ep-navy mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-toggle-on text-ep-blue"></i> Active Publishing Platforms
+          </h4>
+          <p class="text-xs text-slate-500 mb-3">Disabled platforms will be hidden from the publishing queue and skipped during campaign generation.</p>
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+            <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-ep-gray cursor-pointer hover:border-ep-blue transition">
+              <input type="checkbox" id="toggle-facebook" class="w-4 h-4 accent-ep-blue rounded" checked />
+              <span class="text-sm font-semibold text-ep-dark"><i class="fa-brands fa-facebook text-blue-600 mr-1"></i>Facebook</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-ep-gray cursor-pointer hover:border-ep-blue transition">
+              <input type="checkbox" id="toggle-linkedin" class="w-4 h-4 accent-ep-blue rounded" checked />
+              <span class="text-sm font-semibold text-ep-dark"><i class="fa-brands fa-linkedin text-sky-700 mr-1"></i>LinkedIn</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-ep-gray cursor-pointer hover:border-ep-blue transition">
+              <input type="checkbox" id="toggle-instagram" class="w-4 h-4 accent-ep-blue rounded" checked />
+              <span class="text-sm font-semibold text-ep-dark"><i class="fa-brands fa-instagram text-pink-600 mr-1"></i>Instagram</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-ep-gray cursor-pointer hover:border-ep-blue transition">
+              <input type="checkbox" id="toggle-pinterest" class="w-4 h-4 accent-ep-blue rounded" checked />
+              <span class="text-sm font-semibold text-ep-dark"><i class="fa-brands fa-pinterest text-red-600 mr-1"></i>Pinterest</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-lg border border-slate-200 bg-ep-gray cursor-pointer hover:border-ep-blue transition">
+              <input type="checkbox" id="toggle-x" class="w-4 h-4 accent-ep-blue rounded" checked />
+              <span class="text-sm font-semibold text-ep-dark"><i class="fa-brands fa-x-twitter text-slate-900 mr-1"></i>X (Twitter)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- My Social Media Accounts Section -->
+        <div class="border-t border-slate-200 pt-5">
+          <h4 class="text-sm font-bold uppercase tracking-wider text-ep-navy mb-1 flex items-center gap-2">
+            <i class="fa-solid fa-share-nodes text-ep-blue"></i> My Social Media Accounts
+          </h4>
+          <p class="text-xs text-slate-500 mb-4">
+            Configure both your public page/profile URLs and preferred publishing destination behavior. Only valid <code>https://</code> or <code>http://</code> URLs are accepted.
+          </p>
+
+          <div class="space-y-4">
+            <div class="p-3.5 rounded-lg bg-ep-gray border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-ep-navy uppercase flex items-center gap-1.5">
+                  <i class="fa-brands fa-facebook text-blue-600 text-base"></i> Facebook Page URL
+                </label>
+                <select id="mode-facebook" class="text-xs bg-white border border-slate-300 rounded px-2 py-1 font-medium text-slate-700">
+                  <option value="page">Open Configured Page URL</option>
+                  <option value="composer">Open Facebook Share Composer</option>
+                </select>
+              </div>
+              <input type="url" id="url-facebook" placeholder="https://www.facebook.com/ExtrusionPedia" class="w-full px-3 py-2 text-sm rounded border border-slate-300 focus:outline-none focus:border-ep-blue bg-white" />
+              <p id="err-facebook" class="text-xs text-red-600 hidden"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg bg-ep-gray border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-ep-navy uppercase flex items-center gap-1.5">
+                  <i class="fa-brands fa-linkedin text-sky-700 text-base"></i> LinkedIn Page URL
+                </label>
+                <select id="mode-linkedin" class="text-xs bg-white border border-slate-300 rounded px-2 py-1 font-medium text-slate-700">
+                  <option value="page">Open Configured Page URL</option>
+                  <option value="composer">Open LinkedIn Share Offsite Composer</option>
+                </select>
+              </div>
+              <input type="url" id="url-linkedin" placeholder="https://www.linkedin.com/company/extrusionpedia" class="w-full px-3 py-2 text-sm rounded border border-slate-300 focus:outline-none focus:border-ep-blue bg-white" />
+              <p id="err-linkedin" class="text-xs text-red-600 hidden"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg bg-ep-gray border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-ep-navy uppercase flex items-center gap-1.5">
+                  <i class="fa-brands fa-instagram text-pink-600 text-base"></i> Instagram Profile URL
+                </label>
+                <span class="text-[11px] bg-white border border-slate-200 px-2 py-0.5 rounded text-slate-600">Opens Profile</span>
+              </div>
+              <input type="url" id="url-instagram" placeholder="https://www.instagram.com/extrusionpedia/" class="w-full px-3 py-2 text-sm rounded border border-slate-300 focus:outline-none focus:border-ep-blue bg-white" />
+              <p id="err-instagram" class="text-xs text-red-600 hidden"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg bg-ep-gray border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-ep-navy uppercase flex items-center gap-1.5">
+                  <i class="fa-brands fa-pinterest text-red-600 text-base"></i> Pinterest Profile URL
+                </label>
+                <select id="mode-pinterest" class="text-xs bg-white border border-slate-300 rounded px-2 py-1 font-medium text-slate-700">
+                  <option value="composer">Open Pin Creation Tool</option>
+                  <option value="page">Open Profile URL</option>
+                </select>
+              </div>
+              <input type="url" id="url-pinterest" placeholder="https://www.pinterest.com/extrusionpedia/" class="w-full px-3 py-2 text-sm rounded border border-slate-300 focus:outline-none focus:border-ep-blue bg-white" />
+              <p id="err-pinterest" class="text-xs text-red-600 hidden"></p>
+            </div>
+
+            <div class="p-3.5 rounded-lg bg-ep-gray border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-bold text-ep-navy uppercase flex items-center gap-1.5">
+                  <i class="fa-brands fa-x-twitter text-slate-900 text-base"></i> X Profile URL
+                </label>
+                <select id="mode-x" class="text-xs bg-white border border-slate-300 rounded px-2 py-1 font-medium text-slate-700">
+                  <option value="composer">Open Post Intent Composer</option>
+                  <option value="page">Open Profile URL</option>
+                </select>
+              </div>
+              <input type="url" id="url-x" placeholder="https://x.com/extrusionpedia" class="w-full px-3 py-2 text-sm rounded border border-slate-300 focus:outline-none focus:border-ep-blue bg-white" />
+              <p id="err-x" class="text-xs text-red-600 hidden"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gemini API Key Configuration -->
+        <div class="border-t border-slate-200 pt-5">
+          <h4 class="text-sm font-bold uppercase tracking-wider text-ep-navy mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-key text-ep-blue"></i> Google Gemini API Key
+          </h4>
+          <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-2 text-xs text-slate-600">
+            <p>Enter your Gemini API key from Google AI Studio. It will be stored securely in your browser's local memory (`localStorage`).</p>
+            <input type="text" id="custom-api-key" placeholder="AIzaSy..." class="w-full px-3 py-2 text-sm font-mono rounded border border-slate-300 bg-white focus:outline-none focus:border-ep-blue" autocomplete="off" />
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-slate-100 px-6 py-4 flex items-center justify-end gap-3 border-t border-slate-200">
+        <button onclick="closeSettingsModal()" class="px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:bg-slate-200 transition">
+          Cancel
+        </button>
+        <button onclick="saveSettingsFromModal()" class="px-5 py-2 rounded-lg text-sm font-semibold bg-ep-blue hover:bg-ep-navy text-white shadow transition flex items-center gap-2">
+          <i class="fa-solid fa-floppy-disk"></i> Save Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="bg-ep-navy text-white border-b-4 border-ep-cyan shadow-lg sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-ep-blue to-ep-cyan flex items-center justify-center shadow-md border border-white/15">
+          <i class="fa-solid fa-industry text-white text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold tracking-tight text-lg sm:text-xl text-white">Extrusion<span class="text-ep-cyan">Pedia</span></span>
+            <span class="hidden sm:inline-block text-[11px] font-mono uppercase tracking-widest bg-ep-blue/60 text-ep-cyan px-2 py-0.5 rounded border border-ep-cyan/30">extrusionpedia.com</span>
+          </div>
+          <h1 class="text-xs sm:text-sm text-slate-300 font-medium">ExtrusionPedia Social Publisher &mdash; Semi-Automated Campaign Assistant</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button onclick="openSettingsModal()" class="bg-ep-blue hover:bg-ep-cyan hover:text-ep-navy text-white text-xs sm:text-sm font-semibold py-2 px-3.5 rounded-lg border border-ep-cyan/40 transition flex items-center gap-2 shadow-sm">
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings &amp; Accounts</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <div class="container">
-    
-    <!-- 1. Input & Initiation -->
-    <div class="card">
-      <div class="card-title">
-        <div class="card-title-left">
-          <div class="step-badge">1</div>
-          <span>Article Initiation</span>
-        </div>
-      </div>
-      
-      <div class="input-group">
-        <input type="url" id="articleUrlInput" placeholder="Paste Your ExtrusionPedia Article URL (e.g. https://extrusionpedia.com/...)" />
-        <button class="btn-primary" id="btnMainGenerate" onclick="processArticleAndLaunchCampaign()">Generate Social Media Campaign</button>
-      </div>
+  <!-- MAIN WORKSPACE -->
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-1 space-y-6">
 
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <button class="manual-toggle-btn" onclick="toggleManualInputSection()">Need manual input? Click here to provide title & text directly</button>
-        <span id="urlNormalizationFeedback" style="font-size: 0.8rem; color: var(--muted-text);"></span>
-      </div>
-
-      <div id="manualInputSection" style="display: none; margin-top: 16px; border-top: 1px dashed var(--border-color); padding-top: 16px;">
-        <div class="form-group">
-          <label>Manual Article Title</label>
-          <input type="text" id="manualTitleInput" placeholder="e.g. Advanced Die Gap Calibration in Rigid PVC Profile Extrusion" />
+    <!-- STEP 1: ARTICLE URL & PROGRESS -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="bg-gradient-to-r from-ep-navy to-ep-blue px-6 py-3.5 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-6 h-6 rounded-full bg-ep-cyan text-ep-navy font-bold text-xs flex items-center justify-center">1</span>
+            <h2 class="text-white font-bold text-sm sm:text-base tracking-wide">Article Input &amp; Retrieval</h2>
+          </div>
+          <button onclick="loadSampleArticleUrl()" class="text-xs text-ep-cyan hover:underline font-medium flex items-center gap-1">
+            <i class="fa-solid fa-flask"></i> Fill Sample Extrusion Article
+          </button>
         </div>
-        <div class="form-group">
-          <label>Manual Article Content or Core Excerpt</label>
-          <textarea id="manualContentInput" rows="5" placeholder="Paste the complete text or key technical excerpts here..."></textarea>
-        </div>
-      </div>
 
-      <div class="checklist-grid" id="progressChecklist">
-        <div class="check-item" id="chk-fetch"><span class="check-icon">✓</span> 1. Article Retrieved</div>
-        <div class="check-item" id="chk-content"><span class="check-icon">✓</span> 2. Posts Generated</div>
-        <div class="check-item" id="chk-visual"><span class="check-icon">✓</span> 3. Promotional Visual Ready</div>
-        <div class="check-item" id="chk-platforms"><span class="check-icon">✓</span> 4. 5 Platforms Formatted</div>
-      </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label for="article-url-input" class="block text-sm font-bold text-ep-navy mb-1.5">
+              Paste Your ExtrusionPedia Article URL
+            </label>
+            <div class="relative">
+              <i class="fa-solid fa-link absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+              <input
+                type="url"
+                id="article-url-input"
+                placeholder="https://extrusionpedia.com/your-article-slug/"
+                class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-ep-cyan focus:border-ep-blue text-sm font-mono text-ep-dark"
+              />
+            </div>
+            <p id="url-validation-msg" class="text-xs text-red-600 mt-1 hidden"></p>
+          </div>
+
+          <!-- Retrieval Alert -->
+          <div id="retrieval-alert-box" class="hidden rounded-lg p-4 border text-xs space-y-2"></div>
+
+          <!-- Manual Content Accordion -->
+          <div class="border border-slate-200 rounded-lg overflow-hidden bg-ep-gray/60">
+            <button
+              type="button"
+              onclick="toggleManualInputSection()"
+              class="w-full px-4 py-2.5 text-left flex items-center justify-between text-xs font-semibold text-ep-navy hover:bg-slate-200/60 transition"
+            >
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-file-pen text-ep-blue"></i>
+                <span>Manual Article Title &amp; Content (Optional override or fallback)</span>
+              </span>
+              <i id="manual-chevron" class="fa-solid fa-chevron-down text-slate-500 transition-transform"></i>
+            </button>
+            <div id="manual-input-container" class="hidden p-4 border-t border-slate-200 bg-white space-y-3">
+              <div>
+                <label class="block text-xs font-bold text-ep-dark uppercase mb-1">Manual Article Title</label>
+                <input
+                  type="text"
+                  id="manual-title-input"
+                  placeholder="e.g., Troubleshooting Die Lip Build-Up and Melt Fracture in Twin-Screw XPS Foam Extrusion"
+                  class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:border-ep-blue"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-ep-dark uppercase mb-1">Article Full Text / Technical Notes</label>
+                <textarea
+                  id="manual-content-input"
+                  rows="5"
+                  placeholder="Paste technical article paragraphs, parameters, or troubleshooting steps here..."
+                  class="w-full px-3 py-2 text-sm rounded-lg border border-slate-300 focus:outline-none focus:border-ep-blue custom-scrollbar"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <i class="fa-solid fa-shield-halved text-ep-blue"></i>
+              <span>High Precision Industrial Analysis</span>
+            </div>
+            <button
+              id="btn-generate-campaign"
+              onclick="handleGenerateCampaignClick()"
+              class="bg-gradient-to-r from-ep-blue to-ep-cyan hover:from-ep-navy hover:to-ep-blue text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition flex items-center justify-center gap-2.5 text-sm"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Generate Social Media Campaign</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Checklist -->
+      <aside class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col justify-between">
+        <div>
+          <div class="bg-ep-navy px-5 py-3.5 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-list-check text-ep-cyan"></i>
+              <h2 class="text-white font-bold text-sm tracking-wide">Campaign Progress</h2>
+            </div>
+            <span id="campaign-status-pill" class="text-[11px] font-mono bg-white/10 text-slate-200 px-2.5 py-0.5 rounded-full">Idle</span>
+          </div>
+
+          <div class="p-5">
+            <ul id="progress-checklist" class="space-y-2.5 text-xs sm:text-sm"></ul>
+          </div>
+        </div>
+
+        <div class="bg-ep-gray px-5 py-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+          <span id="last-saved-indicator">Ready to produce</span>
+          <button onclick="resetWorkspace()" class="text-ep-blue hover:underline font-medium">Clear Workspace</button>
+        </div>
+      </aside>
     </div>
 
-    <!-- 2. AI-Powered Article Analysis Summary -->
-    <div class="card" id="analysisCard" style="display: none;">
-      <div class="card-title">
-        <div class="card-title-left">
-          <div class="step-badge">2</div>
-          <span>Article Analysis Summary</span>
+    <!-- STEP 2: SUMMARY -->
+    <section id="analysis-section" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+      <div class="bg-ep-navy px-6 py-3.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-ep-cyan text-ep-navy font-bold text-xs flex items-center justify-center">2</span>
+          <h2 class="text-white font-bold text-sm sm:text-base tracking-wide">AI Technical Article Analysis</h2>
         </div>
-        <button class="btn-action" style="font-size: 0.8rem;" onclick="copyFullAnalysisJson()">Copy Analysis JSON</button>
+        <span id="extraction-method-badge" class="text-xs font-mono bg-ep-blue/40 text-ep-cyan border border-ep-cyan/30 px-2.5 py-0.5 rounded"></span>
       </div>
 
-      <div class="meta-grid">
-        <div class="meta-box">
-          <div class="meta-label">Article Title</div>
-          <div class="meta-val" id="metaTitle">-</div>
+      <div class="p-6 space-y-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-lg bg-ep-gray border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-1">Article Title</span>
+            <h3 id="summary-title" class="text-base font-bold text-ep-navy"></h3>
+          </div>
+          <div class="p-4 rounded-lg bg-ep-gray border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-1">Main Technical Topic</span>
+            <p id="summary-topic" class="text-sm font-semibold text-ep-dark"></p>
+          </div>
         </div>
-        <div class="meta-box">
-          <div class="meta-label">Technical Subject / Domain</div>
-          <div class="meta-val" id="metaTopic">-</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-1">Intended Audience</span>
+            <p id="summary-audience" class="text-xs sm:text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-1">Main Reader Benefit</span>
+            <p id="summary-benefit" class="text-xs sm:text-sm text-slate-700 leading-relaxed"></p>
+          </div>
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-1">Key Takeaway</span>
+            <p id="summary-takeaway" class="text-xs sm:text-sm text-slate-700 leading-relaxed"></p>
+          </div>
         </div>
-        <div class="meta-box">
-          <div class="meta-label">Target Audience</div>
-          <div class="meta-val" id="metaAudience">-</div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-2">Technical Points</span>
+            <ul id="summary-keypoints" class="list-disc list-inside text-xs sm:text-sm text-slate-700 space-y-1"></ul>
+          </div>
+          <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col justify-between space-y-3">
+            <div>
+              <span class="text-[11px] font-bold uppercase tracking-wider text-ep-blue block mb-2">Technical Keywords</span>
+              <div id="summary-keywords" class="flex flex-wrap gap-1.5"></div>
+            </div>
+            <div class="pt-2 border-t border-slate-200 flex items-center justify-between gap-2">
+              <div class="truncate">
+                <span class="text-[10px] font-bold uppercase text-slate-400 block">Verified Article URL</span>
+                <a id="summary-url" href="#" target="_blank" rel="noopener noreferrer" class="text-xs font-mono text-ep-blue hover:underline truncate block"></a>
+              </div>
+              <button onclick="copyArticleUrl()" class="shrink-0 text-xs bg-white hover:bg-ep-gray text-ep-navy border border-slate-300 font-semibold px-3 py-1.5 rounded-lg transition flex items-center gap-1.5">
+                <i class="fa-regular fa-copy"></i> Copy Link
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="meta-box">
-          <div class="meta-label">Core Reader Benefit</div>
-          <div class="meta-val" id="metaBenefit">-</div>
+      </div>
+    </section>
+
+    <!-- STEP 3: IMAGE STUDIO -->
+    <section id="image-section" class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hidden">
+      <div class="bg-ep-navy px-6 py-3.5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5">
+          <span class="w-6 h-6 rounded-full bg-ep-cyan text-ep-navy font-bold text-xs flex items-center justify-center">3</span>
+          <h2 class="text-white font-bold text-sm sm:text-base tracking-wide">Promotional Industrial Visual &amp; Platform Crops</h2>
+        </div>
+        <span class="text-xs text-slate-300">ExtrusionPedia Branded Visual Studio</span>
+      </div>
+
+      <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Display Area -->
+        <div class="lg:col-span-7 flex flex-col items-center justify-center bg-ep-navy/5 rounded-xl border border-slate-200 p-4 min-h-[340px] relative">
+          <!-- Loading -->
+          <div id="image-loading-state" class="hidden flex-col items-center justify-center text-center p-8 space-y-3">
+            <div class="w-12 h-12 rounded-full border-4 border-ep-blue border-t-ep-cyan animate-spin"></div>
+            <p class="text-sm font-bold text-ep-navy">Rendering Industrial Visual...</p>
+          </div>
+
+          <!-- Preview -->
+          <div id="image-preview-wrapper" class="w-full flex flex-col items-center space-y-3 hidden">
+            <div class="relative max-h-[460px] overflow-hidden rounded-lg shadow-md border border-slate-300 bg-ep-navy flex items-center justify-center">
+              <img id="promotional-image-el" src="" alt="ExtrusionPedia Promotional Visual" class="max-h-[440px] w-auto object-contain" />
+            </div>
+            <div class="flex flex-wrap items-center justify-between w-full text-xs text-slate-500 px-1">
+              <span id="image-aspect-label" class="font-mono font-semibold text-ep-navy">Crop: 16:9 Landscape (1200x675 PNG)</span>
+              <span>Palette: #0B1F3A &bull; #1261A0 &bull; #16B9E8</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="lg:col-span-5 space-y-5">
+          <div class="bg-ep-gray p-4 rounded-xl border border-slate-200 space-y-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-ep-navy flex items-center gap-1.5">
+              <i class="fa-solid fa-crop-simple text-ep-blue"></i> Platform Crop Presets
+            </h3>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="applyImageCropPreset('16:9')" id="crop-btn-16-9" class="crop-preset-btn px-3 py-2 rounded-lg text-xs font-bold border border-ep-blue bg-ep-blue text-white transition flex flex-col items-center">
+                <span>16:9 Wide</span>
+                <span class="text-[10px] font-normal opacity-80">LinkedIn / X / FB</span>
+              </button>
+              <button onclick="applyImageCropPreset('1:1')" id="crop-btn-1-1" class="crop-preset-btn px-3 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-ep-dark hover:border-ep-blue transition flex flex-col items-center">
+                <span>1:1 Square</span>
+                <span class="text-[10px] font-normal opacity-80">Instagram / FB</span>
+              </button>
+              <button onclick="applyImageCropPreset('2:3')" id="crop-btn-2-3" class="crop-preset-btn px-3 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-ep-dark hover:border-ep-blue transition flex flex-col items-center">
+                <span>2:3 Vertical</span>
+                <span class="text-[10px] font-normal opacity-80">Pinterest Pin</span>
+              </button>
+            </div>
+
+            <label class="flex items-center gap-2 pt-2 cursor-pointer">
+              <input type="checkbox" id="toggle-brand-overlay" onchange="recompositeActiveImage()" checked class="w-4 h-4 accent-ep-blue rounded" />
+              <span class="text-xs font-medium text-ep-dark">Include ExtrusionPedia brand header and title banner</span>
+            </label>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+            <label class="block text-xs font-bold uppercase tracking-wider text-ep-navy">
+              Visual Subject Prompt / Topic Focus
+            </label>
+            <textarea id="image-prompt-input" rows="2" class="w-full p-2.5 text-xs rounded-lg border border-slate-300 bg-white focus:outline-none focus:border-ep-blue custom-scrollbar"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2.5">
+            <button onclick="downloadActiveImage('general')" class="bg-ep-navy hover:bg-ep-blue text-white font-semibold py-2.5 px-4 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <i class="fa-solid fa-download"></i> Download Image
+            </button>
+            <button onclick="regeneratePromotionalImage()" id="btn-regenerate-image" class="bg-ep-blue hover:bg-ep-navy text-white font-semibold py-2.5 px-4 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+              <i class="fa-solid fa-arrows-rotate"></i> Regenerate Visual
+            </button>
+            <button onclick="copyActiveImageToClipboard()" id="btn-copy-image" class="bg-white hover:bg-ep-gray text-ep-navy border border-slate-300 font-semibold py-2.5 px-4 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+              <i class="fa-regular fa-clone"></i> Copy Image
+            </button>
+            <button onclick="switchVisualArtStyle()" class="bg-white hover:bg-ep-gray text-ep-navy border border-slate-300 font-semibold py-2.5 px-4 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-palette text-ep-blue"></i> Theme Variant
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 4: QUEUE -->
+    <section id="publishing-queue-section" class="space-y-5 hidden">
+      <div class="bg-ep-navy rounded-xl px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-sm border-l-4 border-ep-cyan">
+        <div class="flex items-center gap-3">
+          <span class="w-7 h-7 rounded-full bg-ep-cyan text-ep-navy font-bold text-xs flex items-center justify-center">4</span>
+          <div>
+            <h2 class="text-white font-bold text-base sm:text-lg">Social Media Publishing Queue</h2>
+            <p class="text-xs text-slate-300">Copy post text &rarr; Download platform image crop &rarr; Open platform &rarr; Publish manually &rarr; Mark as Published.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span id="published-counter-badge" class="text-xs font-mono bg-white/10 text-ep-cyan px-3 py-1 rounded-full border border-ep-cyan/30">0 / 5 Published</span>
         </div>
       </div>
 
-      <div style="background: #F8FAFC; border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
-        <div class="meta-label">Engineering Takeaway / Provocative Problem</div>
-        <div class="meta-val" id="metaTakeaway" style="font-style: italic;">-</div>
-      </div>
+      <div id="platform-cards-container" class="space-y-6"></div>
+    </section>
 
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="meta-label" style="margin-bottom: 0;">Keywords:</span>
-        <div id="metaKeywords" style="display: flex; gap: 6px; flex-wrap: wrap;"></div>
+  </main>
+
+  <footer class="bg-ep-navy text-slate-400 text-xs border-t border-slate-800 mt-12 py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-white">ExtrusionPedia Social Publisher</span>
+        <span>&bull;</span>
+        <a href="https://extrusionpedia.com" target="_blank" rel="noopener noreferrer" class="text-ep-cyan hover:underline">https://extrusionpedia.com</a>
       </div>
+      <div>Semi-Automated Technical Content Assistant &bull; Complete Visual &amp; Text Workflow</div>
     </div>
+  </footer>
 
-    <!-- 3. Promotional Image Generation & Crops -->
-    <div class="card" id="imageStudioCard" style="display: none;">
-      <div class="card-title">
-        <div class="card-title-left">
-          <div class="step-badge">3</div>
-          <span>Automatic Promotional Image Studio</span>
-        </div>
-        <span style="font-size: 0.85rem; color: var(--muted-text); font-weight: 500;">Branded 1080p Industrial Graphics</span>
-      </div>
+  <script type="module">
+    // Core Platform Definitions
+    const PLATFORM_ORDER = ['facebook', 'linkedin', 'instagram', 'pinterest', 'x'];
 
-      <div class="visual-container">
-        <div class="crop-selector">
-          <button class="crop-btn active" id="btnCropLandscape" onclick="switchImageCrop('landscape')">Landscape 16:9 (LinkedIn / FB / X)</button>
-          <button class="crop-btn" id="btnCropSquare" onclick="switchImageCrop('square')">Square 1:1 (Instagram)</button>
-          <button class="crop-btn" id="btnCropPinterest" onclick="switchImageCrop('pinterest')">Vertical 2:3 (Pinterest)</button>
-        </div>
-
-        <div class="canvas-holder">
-          <canvas id="promoCanvas" width="1200" height="675"></canvas>
-        </div>
-
-        <div class="visual-toolbar">
-          <button class="btn-action" onclick="downloadActiveCanvas()">⬇️ Download Image</button>
-          <button class="btn-action" onclick="copyActiveCanvasToClipboard()">📋 Copy Image</button>
-          <button class="btn-action" onclick="regenerateVisualVariations()">🔄 Regenerate Visual / Theme</button>
-          <button class="btn-action" onclick="saveCurrentCampaignToStorage()">💾 Save Campaign Progress</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- 4. Platform-Specific Publishing Queue -->
-    <div id="publishingQueueWrapper" style="display: none;">
-      <div class="card-title" style="margin-bottom: 16px;">
-        <div class="card-title-left">
-          <div class="step-badge">4</div>
-          <span>Platform-Specific Social Media Posts</span>
-        </div>
-      </div>
-
-      <div id="platformCardsQueue"></div>
-    </div>
-
-  </div>
-
-  <!-- Settings & Accounts Modal -->
-  <div class="modal-backdrop" id="settingsModal">
-    <div class="modal-box">
-      <div class="modal-title">
-        <span>Settings & Social Media Accounts</span>
-        <button class="close-modal-btn" onclick="closeSettingsModal()">&times;</button>
-      </div>
-
-      <div class="form-group">
-        <label>Gemini API Key</label>
-        <input type="text" id="cfgApiKey" placeholder="AIzaSy..." />
-        <small>Required for deep technical analysis and copywriting. Saved strictly in your browser's localStorage.</small>
-      </div>
-
-      <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);" />
-      <div style="font-weight: 700; color: var(--navy); margin-bottom: 12px;">Configurable Publishing Destinations</div>
-
-      <div class="form-group">
-        <label>Facebook Page / Group URL</label>
-        <input type="url" id="cfgUrlFb" placeholder="https://www.facebook.com/your-page" />
-      </div>
-      <div class="form-group">
-        <label>LinkedIn Page or Feed URL</label>
-        <input type="url" id="cfgUrlLi" placeholder="https://www.linkedin.com/feed/" />
-      </div>
-      <div class="form-group">
-        <label>Instagram Web Profile URL</label>
-        <input type="url" id="cfgUrlIg" placeholder="https://www.instagram.com/your-profile" />
-      </div>
-      <div class="form-group">
-        <label>Pinterest Pin Creation URL</label>
-        <input type="url" id="cfgUrlPi" placeholder="https://www.pinterest.com/pin-creation-tool/" />
-      </div>
-      <div class="form-group">
-        <label>X (Twitter) Profile or Post URL</label>
-        <input type="url" id="cfgUrlTw" placeholder="https://x.com/compose/post" />
-      </div>
-
-      <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--border-color);" />
-      <div style="font-weight: 700; color: var(--navy); margin-bottom: 12px;">Active Platforms in Queue</div>
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;">
-        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="enableFb" checked /> Facebook
-        </label>
-        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="enableLi" checked /> LinkedIn
-        </label>
-        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="enableIg" checked /> Instagram
-        </label>
-        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="enablePi" checked /> Pinterest
-        </label>
-        <label style="display: flex; gap: 8px; align-items: center; font-size: 0.9rem; cursor: pointer;">
-          <input type="checkbox" id="enableTw" checked /> X (Twitter)
-        </label>
-      </div>
-
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button class="btn-action" onclick="closeSettingsModal()">Cancel</button>
-        <button class="btn-primary" onclick="saveApplicationSettings()">Save Configurations</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Campaign History & Duplicate Manager Modal -->
-  <div class="modal-backdrop" id="historyModal">
-    <div class="modal-box">
-      <div class="modal-title">
-        <span>Saved Campaigns History</span>
-        <button class="close-modal-btn" onclick="closeCampaignHistoryModal()">&times;</button>
-      </div>
-      <div id="campaignsContainer" class="saved-campaigns-list"></div>
-      <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-        <button class="btn-action" style="color: var(--danger);" onclick="clearAllCampaigns()">Clear All History</button>
-        <button class="btn-action" onclick="closeCampaignHistoryModal()">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast-msg" id="toastNotifier">Action completed!</div>
-
-  <script>
-    // Platform Architecture Definitions
-    const PLATFORM_CONFIGS = [
-      {
+    const PLATFORM_METADATA = {
+      facebook: {
         id: 'facebook',
         name: 'Facebook',
-        badgeColor: '#1877F2',
-        defaultUrl: 'https://www.facebook.com/',
-        maxRecommendedChars: 2000,
-        note: null
+        icon: 'fa-brands fa-facebook',
+        iconBg: 'bg-blue-600',
+        recommendedCrop: '16:9',
+        cropLabel: '16:9 Landscape (1200x675 PNG)',
+        charLimit: 63206,
+        urlSupportNote: 'Full clickable article URL included directly in caption.'
       },
-      {
+      linkedin: {
         id: 'linkedin',
         name: 'LinkedIn',
-        badgeColor: '#0A66C2',
-        defaultUrl: 'https://www.linkedin.com/feed/',
-        maxRecommendedChars: 3000,
-        note: null
+        icon: 'fa-brands fa-linkedin',
+        iconBg: 'bg-sky-700',
+        recommendedCrop: '16:9',
+        cropLabel: '16:9 Technical Banner (1200x675 PNG)',
+        charLimit: 3000,
+        urlSupportNote: 'Clickable URL included in body for production & plastics engineers.'
       },
-      {
+      instagram: {
         id: 'instagram',
         name: 'Instagram',
-        badgeColor: '#E4405F',
-        defaultUrl: 'https://www.instagram.com/',
-        maxRecommendedChars: 2200,
-        note: 'Important: Links in Instagram captions are not clickable. Add this article URL to your Instagram Bio link (e.g. via Linktree) or include it as a Link Sticker in an Instagram Story.'
+        icon: 'fa-brands fa-instagram',
+        iconBg: 'bg-gradient-to-tr from-amber-500 via-pink-600 to-purple-600',
+        recommendedCrop: '1:1',
+        cropLabel: '1:1 Square Feed Post (1080x1080 PNG)',
+        charLimit: 2200,
+        urlSupportNote: 'Note: Captions in feed posts are not clickable. Add the URL to your profile bio or story link.'
       },
-      {
+      pinterest: {
         id: 'pinterest',
         name: 'Pinterest',
-        badgeColor: '#BD081C',
-        defaultUrl: 'https://www.pinterest.com/pin-creation-tool/',
-        maxRecommendedChars: 500,
-        note: 'Optimized for visual discovery. Set the Destination URL directly inside Pinterest to the ExtrusionPedia article link.'
+        icon: 'fa-brands fa-pinterest',
+        iconBg: 'bg-red-600',
+        recommendedCrop: '2:3',
+        cropLabel: '2:3 Vertical Pin Format (1000x1500 PNG)',
+        charLimit: 500,
+        urlSupportNote: 'Paste the destination URL into Pinterest\'s link field.'
       },
-      {
-        id: 'twitter',
+      x: {
+        id: 'x',
         name: 'X (Twitter)',
-        badgeColor: '#0F1419',
-        defaultUrl: 'https://x.com/compose/post',
-        maxRecommendedChars: 280,
-        note: null
+        icon: 'fa-brands fa-x-twitter',
+        iconBg: 'bg-slate-900',
+        recommendedCrop: '16:9',
+        cropLabel: '16:9 Summary Card Image (1200x675 PNG)',
+        charLimit: 280,
+        urlSupportNote: 'URLs count as 23 chars via t.co rule.'
       }
-    ];
-
-    // Global Working Campaign State
-    let currentCampaign = {
-      id: null,
-      date: null,
-      articleUrl: '',
-      normalizedUrl: '',
-      title: '',
-      topic: '',
-      audience: '',
-      benefit: '',
-      takeaway: '',
-      keywords: [],
-      captions: {},
-      publishedStatus: {},
-      cropMode: 'landscape',
-      visualTheme: 0
     };
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadSettingsToInputs();
-    });
+    let userSettings = {
+      enabledPlatforms: { facebook: true, linkedin: true, instagram: true, pinterest: true, x: true },
+      accountUrls: {
+        facebook: 'https://www.facebook.com/ExtrusionPedia',
+        linkedin: 'https://www.linkedin.com/company/extrusionpedia',
+        instagram: 'https://www.instagram.com/extrusionpedia/',
+        pinterest: 'https://www.pinterest.com/extrusionpedia/',
+        x: 'https://x.com/extrusionpedia'
+      },
+      openModes: { facebook: 'page', linkedin: 'page', instagram: 'page', pinterest: 'composer', x: 'composer' },
+      customApiKey: ''
+    };
 
-    // Utilities & Toast
-    function showToast(message) {
-      const toast = document.getElementById('toastNotifier');
-      toast.innerText = message;
-      toast.classList.add('visible');
-      setTimeout(() => toast.classList.remove('visible'), 2800);
-    }
-
-    function normalizeUrl(url) {
-      if (!url) return '';
-      try {
-        const u = new URL(url.trim());
-        return (u.origin + u.pathname).replace(/\/+$/, '').toLowerCase();
-      } catch (e) {
-        return url.trim().replace(/\/+$/, '').toLowerCase();
+    let currentCampaign = {
+      id: null,
+      articleUrl: '',
+      retrievalMethod: '',
+      checklist: {
+        articleRetrieved: false,
+        contentGenerated: false,
+        imageGenerated: false,
+        facebookReady: false,
+        linkedinReady: false,
+        instagramReady: false,
+        pinterestReady: false,
+        xReady: false
+      },
+      analysis: {
+        title: '',
+        mainTopic: '',
+        intendedAudience: '',
+        mainBenefit: '',
+        takeawayQuestion: '',
+        keyPoints: [],
+        keywords: [],
+        visualPrompt: ''
+      },
+      rawBaseImageDataUrl: null,
+      activeCompositeDataUrl: null,
+      platformCrops: { '16:9': null, '1:1': null, '2:3': null },
+      activeCropRatio: '16:9',
+      includeBrandOverlay: true,
+      visualVariantIndex: 0,
+      posts: {
+        facebook: { caption: '', published: false },
+        linkedin: { caption: '', published: false },
+        instagram: { caption: '', published: false },
+        pinterest: { pinTitle: '', caption: '', searchKeywords: '', destinationUrl: '', recommendedFormat: 'Vertical 2:3 (1000x1500 px) PNG', published: false },
+        x: { caption: '', published: false }
       }
+    };
+
+    // Load persisted settings
+    function loadPersistedSettings() {
+      const storedKey = localStorage.getItem('ep_api_key');
+      if (storedKey) userSettings.customApiKey = storedKey;
+      
+      const storedSettings = localStorage.getItem('ep_user_settings');
+      if (storedSettings) {
+        try {
+          const parsed = JSON.parse(storedSettings);
+          userSettings = { ...userSettings, ...parsed };
+        } catch (e) {}
+      }
+      populateSettingsModalFields();
     }
 
-    function toggleManualInputSection() {
-      const sec = document.getElementById('manualInputSection');
-      sec.style.display = (sec.style.display === 'none' || !sec.style.display) ? 'block' : 'none';
+    function populateSettingsModalFields() {
+      PLATFORM_ORDER.forEach(p => {
+        const toggleEl = document.getElementById(`toggle-${p}`);
+        if (toggleEl) toggleEl.checked = Boolean(userSettings.enabledPlatforms[p]);
+        const urlEl = document.getElementById(`url-${p}`);
+        if (urlEl) urlEl.value = userSettings.accountUrls[p] || '';
+        const modeEl = document.getElementById(`mode-${p}`);
+        if (modeEl && userSettings.openModes[p]) modeEl.value = userSettings.openModes[p];
+      });
+      const keyEl = document.getElementById('custom-api-key');
+      if (keyEl) keyEl.value = userSettings.customApiKey || '';
     }
 
-    // Modal Handlers
-    function openSettingsModal() { document.getElementById('settingsModal').classList.add('open'); }
-    function closeSettingsModal() { document.getElementById('settingsModal').classList.remove('open'); }
-    function openCampaignHistoryModal() {
-      renderCampaignsList();
-      document.getElementById('historyModal').classList.add('open');
-    }
-    function closeCampaignHistoryModal() { document.getElementById('historyModal').classList.remove('open'); }
+    window.saveSettingsFromModal = function () {
+      PLATFORM_ORDER.forEach(p => {
+        userSettings.enabledPlatforms[p] = Boolean(document.getElementById(`toggle-${p}`)?.checked);
+        userSettings.accountUrls[p] = document.getElementById(`url-${p}`)?.value.trim() || '';
+        const modeEl = document.getElementById(`mode-${p}`);
+        if (modeEl) userSettings.openModes[p] = modeEl.value;
+      });
 
-    // Settings Management
-    function loadSettingsToInputs() {
-      document.getElementById('cfgApiKey').value = localStorage.getItem('ep_api_key') || '';
-      document.getElementById('cfgUrlFb').value = localStorage.getItem('ep_dest_facebook') || 'https://www.facebook.com/';
-      document.getElementById('cfgUrlLi').value = localStorage.getItem('ep_dest_linkedin') || 'https://www.linkedin.com/feed/';
-      document.getElementById('cfgUrlIg').value = localStorage.getItem('ep_dest_instagram') || 'https://www.instagram.com/';
-      document.getElementById('cfgUrlPi').value = localStorage.getItem('ep_dest_pinterest') || 'https://www.pinterest.com/pin-creation-tool/';
-      document.getElementById('cfgUrlTw').value = localStorage.getItem('ep_dest_twitter') || 'https://x.com/compose/post';
+      const keyVal = document.getElementById('custom-api-key')?.value.trim() || '';
+      userSettings.customApiKey = keyVal;
+      localStorage.setItem('ep_api_key', keyVal);
+      localStorage.setItem('ep_user_settings', JSON.stringify(userSettings));
 
-      document.getElementById('enableFb').checked = localStorage.getItem('ep_enable_facebook') !== 'false';
-      document.getElementById('enableLi').checked = localStorage.getItem('ep_enable_linkedin') !== 'false';
-      document.getElementById('enableIg').checked = localStorage.getItem('ep_enable_instagram') !== 'false';
-      document.getElementById('enablePi').checked = localStorage.getItem('ep_enable_pinterest') !== 'false';
-      document.getElementById('enableTw').checked = localStorage.getItem('ep_enable_twitter') !== 'false';
-    }
-
-    function saveApplicationSettings() {
-      const key = document.getElementById('cfgApiKey').value.trim();
-      localStorage.setItem('ep_api_key', key);
-      localStorage.setItem('ep_dest_facebook', document.getElementById('cfgUrlFb').value.trim());
-      localStorage.setItem('ep_dest_linkedin', document.getElementById('cfgUrlLi').value.trim());
-      localStorage.setItem('ep_dest_instagram', document.getElementById('cfgUrlIg').value.trim());
-      localStorage.setItem('ep_dest_pinterest', document.getElementById('cfgUrlPi').value.trim());
-      localStorage.setItem('ep_dest_twitter', document.getElementById('cfgUrlTw').value.trim());
-
-      localStorage.setItem('ep_enable_facebook', document.getElementById('enableFb').checked);
-      localStorage.setItem('ep_enable_linkedin', document.getElementById('enableLi').checked);
-      localStorage.setItem('ep_enable_instagram', document.getElementById('enableIg').checked);
-      localStorage.setItem('ep_enable_pinterest', document.getElementById('enablePi').checked);
-      localStorage.setItem('ep_enable_twitter', document.getElementById('enableTw').checked);
-
+      renderChecklist();
+      if (currentCampaign.checklist.contentGenerated) {
+        renderPublishingQueueCards();
+      }
       closeSettingsModal();
-      showToast('Settings & destinations updated successfully.');
-      if (currentCampaign.title) {
-        renderPlatformQueue();
-      }
-    }
+      showToast('Settings saved successfully!', 'success');
+    };
 
-    // Workflow Engine
-    async function processArticleAndLaunchCampaign() {
-      const apiKey = localStorage.getItem('ep_api_key');
+    window.openSettingsModal = function () {
+      populateSettingsModalFields();
+      document.getElementById('settings-modal').classList.remove('hidden');
+      document.getElementById('settings-modal').classList.add('flex');
+    };
+
+    window.closeSettingsModal = function () {
+      document.getElementById('settings-modal').classList.add('hidden');
+      document.getElementById('settings-modal').classList.remove('flex');
+    };
+
+    // Article Retrieval & AI Pipeline
+    window.handleGenerateCampaignClick = async function () {
+      const apiKey = userSettings.customApiKey || localStorage.getItem('ep_api_key');
       if (!apiKey) {
-        alert('Please configure your Gemini API Key in Settings first.');
+        showToast('Please enter your Gemini API Key in Settings first.', 'warning');
         openSettingsModal();
         return;
       }
 
-      const inputUrl = document.getElementById('articleUrlInput').value.trim();
-      const manualTitle = document.getElementById('manualTitleInput').value.trim();
-      const manualContent = document.getElementById('manualContentInput').value.trim();
+      const urlInput = document.getElementById('article-url-input');
+      const rawUrl = urlInput.value.trim();
+      const manualTitle = document.getElementById('manual-title-input').value.trim();
+      const manualContent = document.getElementById('manual-content-input').value.trim();
 
-      if (!inputUrl && !manualTitle) {
-        alert('Please supply an ExtrusionPedia article URL or enter title and content manually.');
+      if (!rawUrl && !manualTitle) {
+        showToast('Please provide an article URL or input title and content manually.', 'error');
         return;
       }
 
-      // Check duplicates
-      const normalized = normalizeUrl(inputUrl);
-      if (normalized) {
-        const savedCampaigns = getStoredCampaigns();
-        const existing = savedCampaigns.find(c => c.normalizedUrl === normalized);
-        if (existing) {
-          const proceed = confirm(`An existing campaign for this article was found (${new Date(existing.date).toLocaleDateString()}).\n\nClick "OK" to reload the existing campaign, or "Cancel" to create a fresh one.`);
-          if (proceed) {
-            restoreCampaign(existing);
-            return;
-          }
-        }
-      }
-
-      const btn = document.getElementById('btnMainGenerate');
+      const btn = document.getElementById('btn-generate-campaign');
       btn.disabled = true;
-      btn.innerText = 'Analyzing & Preparing...';
-
-      updateProgressStep('chk-fetch', false);
-      updateProgressStep('chk-content', false);
-      updateProgressStep('chk-visual', false);
-      updateProgressStep('chk-platforms', false);
+      btn.innerHTML = `<i class="fa-solid fa-circle-notch animate-spin"></i> Analyzing &amp; Producing...`;
+      updateStatusPill('Processing...', 'bg-ep-cyan text-ep-navy font-bold');
 
       try {
-        // Attempt retrieval or manual pass
-        let resolvedText = manualContent;
-        let resolvedTitle = manualTitle;
+        let title = manualTitle;
+        let content = manualContent;
+        let method = 'User Supplied Content';
 
-        if (inputUrl) {
+        if (rawUrl && content.length < 100) {
           try {
-            const fetched = await attemptLiveArticleRetrieval(inputUrl);
-            if (fetched && fetched.content) {
-              resolvedText = fetched.content;
-              if (fetched.title && !resolvedTitle) resolvedTitle = fetched.title;
+            const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(rawUrl)}`);
+            if (res.ok) {
+              const data = await res.json();
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(data.contents, 'text/html');
+              title = title || doc.querySelector('h1')?.innerText || doc.querySelector('title')?.innerText || '';
+              const paragraphs = Array.from(doc.querySelectorAll('article p, main p, p'))
+                .map(p => p.innerText.trim())
+                .filter(p => p.length > 30)
+                .slice(0, 15)
+                .join('\n\n');
+              if (paragraphs.length > 100) {
+                content = paragraphs;
+                method = 'Live Article Scrape';
+              }
             }
-          } catch (e) {
-            console.warn('Direct retrieval note:', e.message);
-          }
+          } catch (e) {}
         }
 
-        updateProgressStep('chk-fetch', true);
+        currentCampaign.articleUrl = rawUrl || 'https://extrusionpedia.com';
+        currentCampaign.retrievalMethod = method;
+        currentCampaign.checklist.articleRetrieved = true;
+        renderChecklist();
 
-        // Analysis & Copywriting via AI
-        const analysis = await queryGeminiAnalysis(apiKey, inputUrl, resolvedTitle, resolvedText);
-        updateProgressStep('chk-content', true);
-
-        // Populate working campaign state
-        currentCampaign = {
-          id: 'camp_' + Date.now(),
-          date: new Date().toISOString(),
-          articleUrl: inputUrl,
-          normalizedUrl: normalized,
-          title: analysis.title || resolvedTitle || 'Extrusion Technical Analysis',
-          topic: analysis.topic || 'Industrial Extrusion',
-          audience: analysis.audience || 'Plastics & Process Engineers',
-          benefit: analysis.benefit || 'Practical operational optimization',
-          takeaway: analysis.takeaway || 'Key parameter considerations',
-          keywords: analysis.keywords || ['Extrusion', 'Manufacturing', 'Plastics'],
-          captions: analysis.posts || {},
-          publishedStatus: {},
-          cropMode: 'landscape',
-          visualTheme: 0
+        // 1. Gemini Content Generation
+        const aiData = await callGeminiAnalysis(apiKey, currentCampaign.articleUrl, title, content);
+        
+        currentCampaign.analysis = {
+          title: aiData.articleTitle || title || 'Extrusion Process Technical Guide',
+          mainTopic: aiData.mainTopic || 'Plastics & Foam Extrusion',
+          intendedAudience: aiData.intendedAudience || 'Process and Production Engineers',
+          mainBenefit: aiData.mainBenefit || 'Technical troubleshooting and optimization',
+          takeawayQuestion: aiData.interestingTakeaway || '',
+          keyPoints: aiData.keyPoints || [],
+          keywords: aiData.keywords || ['Extrusion', 'Manufacturing', 'Polymers'],
+          visualPrompt: aiData.visualPrompt || 'Industrial extrusion die and calibrated melt processing line'
         };
 
-        // Render Summary
-        displayAnalysisSummary();
+        currentCampaign.posts.facebook.caption = aiData.facebookPost || '';
+        currentCampaign.posts.linkedin.caption = aiData.linkedInPost || '';
+        currentCampaign.posts.instagram.caption = aiData.instagramCaption || '';
+        currentCampaign.posts.pinterest = {
+          pinTitle: aiData.pinterestPin?.pinTitle || currentCampaign.analysis.title,
+          caption: aiData.pinterestPin?.description || '',
+          searchKeywords: Array.isArray(aiData.pinterestPin?.searchKeywords) ? aiData.pinterestPin.searchKeywords.join(', ') : '',
+          destinationUrl: currentCampaign.articleUrl,
+          recommendedFormat: 'Vertical 2:3 (1000x1500) PNG',
+          published: false
+        };
+        currentCampaign.posts.x.caption = aiData.xPost || '';
 
-        // Render Image Studio
-        renderVisualCanvas();
-        updateProgressStep('chk-visual', true);
+        currentCampaign.checklist.contentGenerated = true;
+        currentCampaign.checklist.facebookReady = true;
+        currentCampaign.checklist.linkedinReady = true;
+        currentCampaign.checklist.instagramReady = true;
+        currentCampaign.checklist.pinterestReady = true;
+        currentCampaign.checklist.xReady = true;
 
-        // Render Platform Cards
-        renderPlatformQueue();
-        updateProgressStep('chk-platforms', true);
+        renderAnalysisSummary();
+        renderChecklist();
 
-        // Save automatically
-        saveCurrentCampaignToStorage(false);
+        // 2. Automated Promotional Image Generation (Guaranteed Completion)
+        document.getElementById('image-prompt-input').value = currentCampaign.analysis.visualPrompt;
+        await producePromotionalImagePipeline(currentCampaign.analysis.visualPrompt);
 
-        showToast('Campaign generated and ready for publishing!');
+        // 3. Render Platform Queue
+        renderPublishingQueueCards();
+        updateStatusPill('Campaign Ready', 'bg-emerald-500 text-white font-bold');
+        showToast('Complete social media campaign & visuals produced!', 'success');
       } catch (err) {
         console.error(err);
-        alert('Generation Error: ' + err.message);
+        showToast(`Error: ${err.message}`, 'error');
+        updateStatusPill('Error', 'bg-red-500 text-white font-bold');
       } finally {
         btn.disabled = false;
-        btn.innerText = 'Generate Social Media Campaign';
+        btn.innerHTML = `<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Generate Social Media Campaign</span>`;
       }
-    }
+    };
 
-    function updateProgressStep(stepId, isComplete) {
-      const el = document.getElementById(stepId);
-      if (!el) return;
-      if (isComplete) el.classList.add('done');
-      else el.classList.remove('done');
-    }
+    async function callGeminiAnalysis(apiKey, url, title, content) {
+      const prompt = `You are a Senior Extrusion Technical Strategist for ExtrusionPedia (https://extrusionpedia.com).
+Analyze this article and generate an exact multi-platform campaign.
+URL: ${url}
+Title: ${title}
+Content: ${content || 'Extrusion engineering, die geometry, polymer melt dynamics, cooling and sizing'}
 
-    async function attemptLiveArticleRetrieval(url) {
-      // Clean fetch proxy fallback
-      try {
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-        const res = await fetch(proxyUrl);
-        if (!res.ok) throw new Error('Live fetch failed');
-        const data = await res.json();
-        const html = data.contents;
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const title = doc.querySelector('h1')?.innerText || doc.querySelector('title')?.innerText || '';
-        
-        // Extract readable body text
-        const paragraphs = Array.from(doc.querySelectorAll('article p, main p, .entry-content p, p'))
-          .map(p => p.innerText.trim())
-          .filter(t => t.length > 50)
-          .slice(0, 15)
-          .join('\n\n');
-
-        return { title, content: paragraphs };
-      } catch (err) {
-        return null;
-      }
-    }
-
-    async function queryGeminiAnalysis(apiKey, articleUrl, manualTitle, contextText) {
-      const prompt = `You are a senior full-stack content strategist and industrial extrusion engineer for ExtrusionPedia (https://extrusionpedia.com).
-Your task is to analyze the following technical article data and prepare platform-tailored social media campaigns.
-
-Article URL: ${articleUrl || 'https://extrusionpedia.com'}
-Provided Title: ${manualTitle || 'Derive from context'}
-Context/Content: ${contextText || 'Extrusion engineering, die design, process troubleshooting, materials, or cooling.'}
-
-Return ONLY a valid JSON object matching this schema without any markdown formatting or surrounding backticks:
+Output ONLY valid JSON matching this schema:
 {
-  "title": "Clean, technically precise title",
-  "topic": "Main technical domain (e.g. Die Gap Calibration, Melt Fracture Prevention, XPS Foaming)",
-  "audience": "Primary engineering personas (e.g. Process Engineers, Plant Managers, QA Specialists)",
-  "benefit": "Core practical industrial outcome reader gains",
-  "takeaway": "One compelling engineering observation or question",
-  "keywords": ["Term1", "Term2", "Term3", "Term4"],
-  "posts": {
-    "facebook": "Starts with a relatable plant floor or technical question, explains value concisely, invites readers to read full guide, complete with URL and 3-4 hashtags.",
-    "linkedin": "Authoritative engineering tone targeting manufacturing professionals. Mentions industrial operational impact, practical takeaway, natural invitation to read on ExtrusionPedia, full article URL, and professional hashtags.",
-    "instagram": "Punchy hook, concise explanation of the engineering problem, explicit instruction to view link in bio/story, relevant hashtags.",
-    "pinterest": "Title: [Pin Title]\\n\\nDescription: Thorough description focusing on what engineers and operators will learn from this guide, with destination URL.",
-    "twitter": "Ultra-concise post strictly under 230 characters to leave room for URL, sharp hook, article URL, and 2-3 focused hashtags."
-  }
+  "articleTitle": "Clear technical title",
+  "mainTopic": "Extrusion topic",
+  "intendedAudience": "Engineers and plant managers",
+  "mainBenefit": "Actionable takeaway",
+  "interestingTakeaway": "Thought-provoking engineering question or insight",
+  "keyPoints": ["Point 1", "Point 2", "Point 3"],
+  "keywords": ["Keyword1", "Keyword2", "Keyword3"],
+  "visualPrompt": "Detailed industrial visual description representing the article subject",
+  "facebookPost": "Post with engaging observation, article benefit, URL (${url}), and 3 hashtags.",
+  "linkedInPost": "Professional in-depth post for plastics engineers, takeaway, CTA, URL (${url}), and industry hashtags.",
+  "instagramCaption": "Visual-focused caption with strong hook, bio link callout, and hashtags.",
+  "pinterestPin": {
+    "pinTitle": "Pin Title",
+    "description": "Educational description highlighting what engineers will learn.",
+    "searchKeywords": ["Keyword 1", "Keyword 2"]
+  },
+  "xPost": "Concise post strictly under 230 chars + ${url} + 2 hashtags."
 }`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
@@ -1060,428 +869,636 @@ Return ONLY a valid JSON object matching this schema without any markdown format
       });
 
       if (!res.ok) {
-        const errJson = await res.json();
-        throw new Error(errJson.error?.message || 'Gemini API call failed');
+        const errorData = await res.json();
+        throw new Error(errorData.error ? errorData.error.message : 'AI request failed');
       }
 
-      const jsonResp = await res.json();
-      const rawText = jsonResp.candidates[0].content.parts[0].text;
-      return JSON.parse(rawText);
+      const json = await res.json();
+      return JSON.parse(json.candidates[0].content.parts[0].text);
     }
 
-    function displayAnalysisSummary() {
-      document.getElementById('metaTitle').innerText = currentCampaign.title;
-      document.getElementById('metaTopic').innerText = currentCampaign.topic;
-      document.getElementById('metaAudience').innerText = currentCampaign.audience;
-      document.getElementById('metaBenefit').innerText = currentCampaign.benefit;
-      document.getElementById('metaTakeaway').innerText = `“${currentCampaign.takeaway}”`;
+    // =========================================================================
+    // ROBUST IMAGE GENERATION PIPELINE (AI + BUILT-IN INDUSTRIAL CANVAS STUDIO)
+    // =========================================================================
+    async function producePromotionalImagePipeline(promptText) {
+      const section = document.getElementById('image-section');
+      const loading = document.getElementById('image-loading-state');
+      const preview = document.getElementById('image-preview-wrapper');
 
-      const kwContainer = document.getElementById('metaKeywords');
-      kwContainer.innerHTML = '';
-      currentCampaign.keywords.forEach(kw => {
-        const span = document.createElement('span');
-        span.style.background = '#E2E8F0';
-        span.style.color = 'var(--navy)';
-        span.style.padding = '3px 9px';
-        span.style.borderRadius = '6px';
-        span.style.fontSize = '0.8rem';
-        span.style.fontWeight = '600';
-        span.innerText = kw;
-        kwContainer.appendChild(span);
-      });
+      section.classList.remove('hidden');
+      loading.classList.remove('hidden');
+      loading.classList.add('flex');
+      preview.classList.add('hidden');
 
-      document.getElementById('analysisCard').style.display = 'block';
+      let generated = false;
+      const apiKey = userSettings.customApiKey || localStorage.getItem('ep_api_key');
+
+      // Attempt AI image generation if endpoint supported
+      if (apiKey) {
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flash-image:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ role: 'user', parts: [{ text: `Professional industrial photography: ${promptText}. Modern plastics extrusion machinery, deep navy and cyan ambient tones.` }] }],
+              generationConfig: { responseModalities: ['IMAGE'], imageConfig: { aspectRatio: "16:9" } }
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            const part = data.candidates?.[0]?.content?.parts?.find(p => p.inlineData);
+            if (part && part.inlineData?.data) {
+              currentCampaign.rawBaseImageDataUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+              generated = true;
+            }
+          }
+        } catch (e) {
+          console.warn('AI image endpoint skipped, switching to built-in high-res studio canvas');
+        }
+      }
+
+      // Guaranteed Fallback: Render High-Resolution Extrusion Blueprint Visual
+      if (!generated) {
+        currentCampaign.rawBaseImageDataUrl = renderIndustrialBlueprintBase();
+      }
+
+      await buildAllPlatformCrops();
+
+      currentCampaign.checklist.imageGenerated = true;
+      renderChecklist();
+
+      loading.classList.add('hidden');
+      loading.classList.remove('flex');
+      preview.classList.remove('hidden');
     }
 
-    function copyFullAnalysisJson() {
-      navigator.clipboard.writeText(JSON.stringify(currentCampaign, null, 2)).then(() => {
-        showToast('Complete Analysis JSON copied.');
-      });
-    }
+    window.regeneratePromotionalImage = async function () {
+      const prompt = document.getElementById('image-prompt-input').value.trim() || currentCampaign.analysis.title;
+      await producePromotionalImagePipeline(prompt);
+      renderPublishingQueueCards();
+      showToast('Visual regenerated successfully!', 'success');
+    };
 
-    // High-Resolution Engineering Visual Canvas
-    function switchImageCrop(mode) {
-      currentCampaign.cropMode = mode;
-      document.querySelectorAll('.crop-btn').forEach(b => b.classList.remove('active'));
-      if (mode === 'landscape') document.getElementById('btnCropLandscape').classList.add('active');
-      if (mode === 'square') document.getElementById('btnCropSquare').classList.add('active');
-      if (mode === 'pinterest') document.getElementById('btnCropPinterest').classList.add('active');
-      renderVisualCanvas();
-    }
+    window.switchVisualArtStyle = async function () {
+      currentCampaign.visualVariantIndex = (currentCampaign.visualVariantIndex + 1) % 3;
+      currentCampaign.rawBaseImageDataUrl = renderIndustrialBlueprintBase();
+      await buildAllPlatformCrops();
+      renderPublishingQueueCards();
+      showToast('Switched visual theme style.', 'info');
+    };
 
-    function regenerateVisualVariations() {
-      currentCampaign.visualTheme = (currentCampaign.visualTheme + 1) % 3;
-      renderVisualCanvas();
-      showToast('Visual theme variation updated.');
-    }
-
-    function renderVisualCanvas() {
-      const canvas = document.getElementById('promoCanvas');
+    // Client-side high-fidelity engineering vector graphic generator
+    function renderIndustrialBlueprintBase() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1600;
+      canvas.height = 900;
       const ctx = canvas.getContext('2d');
 
-      // Set canvas dimension based on selected platform crop
-      let w = 1200, h = 675; // 16:9
-      if (currentCampaign.cropMode === 'square') { w = 1080; h = 1080; } // 1:1
-      if (currentCampaign.cropMode === 'pinterest') { w = 1000; h = 1500; } // 2:3
-
-      canvas.width = w;
-      canvas.height = h;
-
-      // Color Palette
-      const navy = '#0B1F3A';
-      const industrialBlue = '#1261A0';
-      const cyan = '#16B9E8';
-
-      // 1. Background Gradient
-      const grad = ctx.createLinearGradient(0, 0, w, h);
-      if (currentCampaign.visualTheme === 0) {
+      const variant = currentCampaign.visualVariantIndex;
+      const grad = ctx.createLinearGradient(0, 0, 1600, 900);
+      if (variant === 0) {
         grad.addColorStop(0, '#061324');
-        grad.addColorStop(0.5, navy);
-        grad.addColorStop(1, '#0c274c');
-      } else if (currentCampaign.visualTheme === 1) {
-        grad.addColorStop(0, '#0B1F3A');
-        grad.addColorStop(0.6, industrialBlue);
-        grad.addColorStop(1, '#05111E');
-      } else {
-        grad.addColorStop(0, '#040B14');
-        grad.addColorStop(0.7, '#0E2442');
+        grad.addColorStop(0.5, '#0B1F3A');
         grad.addColorStop(1, '#1261A0');
+      } else if (variant === 1) {
+        grad.addColorStop(0, '#0B1F3A');
+        grad.addColorStop(0.7, '#1261A0');
+        grad.addColorStop(1, '#081D35');
+      } else {
+        grad.addColorStop(0, '#030A14');
+        grad.addColorStop(0.5, '#0B1F3A');
+        grad.addColorStop(1, '#16B9E8');
       }
       ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, w, h);
+      ctx.fillRect(0, 0, 1600, 900);
 
-      // 2. Blueprint Engineering Grid
-      ctx.strokeStyle = 'rgba(22, 185, 232, 0.08)';
+      // Blueprint Grid
+      ctx.strokeStyle = 'rgba(22, 185, 232, 0.1)';
       ctx.lineWidth = 1;
-      const step = 45;
-      for (let x = 0; x < w; x += step) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0); ctx.lineTo(x, h);
-        ctx.stroke();
+      for (let x = 0; x < 1600; x += 40) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 900); ctx.stroke();
       }
-      for (let y = 0; y < h; y += step) {
-        ctx.beginPath();
-        ctx.moveTo(0, y); ctx.lineTo(w, y);
-        ctx.stroke();
+      for (let y = 0; y < 900; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1600, y); ctx.stroke();
       }
 
-      // 3. Technical Framing & Precision Markers
+      // Industrial Machinery Wireframe Simulation
       ctx.strokeStyle = 'rgba(22, 185, 232, 0.35)';
-      ctx.lineWidth = 2;
-      const margin = 40;
-      ctx.strokeRect(margin, margin, w - (margin * 2), h - (margin * 2));
+      ctx.lineWidth = 3;
+      ctx.strokeRect(150, 150, 1300, 600);
 
-      // Precision crosshairs
-      const drawCross = (cx, cy) => {
+      // Flow Die Extrusion Cones
+      ctx.beginPath();
+      ctx.moveTo(250, 250);
+      ctx.lineTo(800, 380);
+      ctx.lineTo(1350, 250);
+      ctx.strokeStyle = '#1261A0';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(250, 650);
+      ctx.lineTo(800, 520);
+      ctx.lineTo(1350, 650);
+      ctx.stroke();
+
+      // Extruder Barrel Zones & Melt Center
+      ctx.beginPath();
+      ctx.arc(800, 450, 180, 0, Math.PI * 2);
+      ctx.strokeStyle = '#16B9E8';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(800, 450, 120, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Precision Markers
+      const cross = (cx, cy) => {
         ctx.beginPath();
-        ctx.moveTo(cx - 12, cy); ctx.lineTo(cx + 12, cy);
-        ctx.moveTo(cx, cy - 12); ctx.lineTo(cx, cy + 12);
+        ctx.moveTo(cx - 15, cy); ctx.lineTo(cx + 15, cy);
+        ctx.moveTo(cx, cy - 15); ctx.lineTo(cx, cy + 15);
+        ctx.strokeStyle = '#16B9E8';
         ctx.stroke();
       };
-      drawCross(margin, margin);
-      drawCross(w - margin, margin);
-      drawCross(margin, h - margin);
-      drawCross(w - margin, h - margin);
+      cross(150, 150); cross(1450, 150); cross(150, 750); cross(1450, 750);
 
-      // 4. Header Badge
-      ctx.fillStyle = cyan;
-      ctx.font = 'bold 22px "Inter", sans-serif';
-      ctx.fillText('EXTRUSIONPEDIA // TECHNICAL ENGINEERING ARCHIVE', margin + 30, margin + 55);
+      return canvas.toDataURL('image/png');
+    }
 
-      // 5. Topic Tag Pill
-      const topicText = (currentCampaign.topic || 'TECHNICAL GUIDE').toUpperCase();
-      ctx.font = '700 16px "Inter", sans-serif';
-      const topicWidth = ctx.measureText(topicText).width;
-      ctx.fillStyle = industrialBlue;
-      ctx.fillRect(margin + 30, margin + 78, topicWidth + 28, 36);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillText(topicText, margin + 44, margin + 102);
+    async function buildAllPlatformCrops() {
+      if (!currentCampaign.rawBaseImageDataUrl) return;
+      const includeOverlay = document.getElementById('toggle-brand-overlay')?.checked ?? true;
+      currentCampaign.includeBrandOverlay = includeOverlay;
 
-      // 6. Article Title (Auto wrapped)
-      ctx.fillStyle = '#FFFFFF';
-      const titleFontSize = currentCampaign.cropMode === 'pinterest' ? 52 : (w > 1100 ? 46 : 40);
-      ctx.font = `bold ${titleFontSize}px "Inter", sans-serif`;
-      const titleStartY = margin + 180;
-      const maxTitleWidth = w - (margin * 2) - 80;
-      wrapCanvasText(ctx, currentCampaign.title, margin + 30, titleStartY, maxTitleWidth, titleFontSize * 1.25);
+      const img = await loadImageElement(currentCampaign.rawBaseImageDataUrl);
+      const specs = {
+        '16:9': { width: 1200, height: 675 },
+        '1:1': { width: 1080, height: 1080 },
+        '2:3': { width: 1000, height: 1500 }
+      };
 
-      // 7. Keywords / Industrial Badges
-      let kwX = margin + 30;
-      const kwY = h - margin - 90;
-      (currentCampaign.keywords || []).slice(0, 4).forEach(k => {
-        ctx.font = '600 15px "Inter", sans-serif';
-        const kwW = ctx.measureText(k).width;
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-        ctx.fillRect(kwX, kwY - 22, kwW + 24, 32);
-        ctx.strokeStyle = 'rgba(22, 185, 232, 0.4)';
-        ctx.strokeRect(kwX, kwY - 22, kwW + 24, 32);
-        ctx.fillStyle = '#E2E8F0';
-        ctx.fillText(k, kwX + 12, kwY);
-        kwX += kwW + 36;
-      });
+      for (const [ratio, dim] of Object.entries(specs)) {
+        currentCampaign.platformCrops[ratio] = renderCroppedBrandedCanvas(img, dim.width, dim.height, includeOverlay);
+      }
 
-      // 8. Bottom Brand Bar
-      ctx.fillStyle = 'rgba(11, 31, 58, 0.95)';
-      ctx.fillRect(margin, h - margin - 50, w - (margin * 2), 50);
-      ctx.fillStyle = cyan;
-      ctx.font = '700 17px "Inter", sans-serif';
-      ctx.fillText('Read the full technical article at: extrusionpedia.com', margin + 30, h - margin - 19);
+      applyImageCropPreset(currentCampaign.activeCropRatio || '16:9');
+    }
 
-      document.getElementById('imageStudioCard').style.display = 'block';
+    function renderCroppedBrandedCanvas(sourceImg, targetW, targetH, includeOverlay) {
+      const canvas = document.createElement('canvas');
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext('2d');
+
+      ctx.fillStyle = '#0B1F3A';
+      ctx.fillRect(0, 0, targetW, targetH);
+
+      // Centered Cover Crop
+      const srcRatio = sourceImg.width / sourceImg.height;
+      const dstRatio = targetW / targetH;
+      let drawW, drawH, offsetX, offsetY;
+
+      if (srcRatio > dstRatio) {
+        drawH = targetH;
+        drawW = sourceImg.width * (targetH / sourceImg.height);
+        offsetX = (targetW - drawW) / 2;
+        offsetY = 0;
+      } else {
+        drawW = targetW;
+        drawH = sourceImg.height * (targetW / sourceImg.width);
+        offsetX = 0;
+        offsetY = (targetH - drawH) / 2;
+      }
+
+      ctx.drawImage(sourceImg, offsetX, offsetY, drawW, drawH);
+
+      if (includeOverlay) {
+        const pad = Math.round(targetW * 0.04);
+
+        // Header Brand Capsule
+        ctx.fillStyle = 'rgba(11, 31, 58, 0.9)';
+        ctx.beginPath();
+        ctx.roundRect(pad, pad, 300, 48, 8);
+        ctx.fill();
+        ctx.strokeStyle = '#16B9E8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 22px Inter, sans-serif';
+        ctx.fillText('Extrusion', pad + 18, pad + 32);
+        ctx.fillStyle = '#16B9E8';
+        ctx.fillText('Pedia.com', pad + 120, pad + 32);
+
+        // Bottom Gradient Banner
+        const bannerH = Math.round(targetH * 0.28);
+        const grad = ctx.createLinearGradient(0, targetH - bannerH, 0, targetH);
+        grad.addColorStop(0, 'rgba(11, 31, 58, 0)');
+        grad.addColorStop(0.35, 'rgba(11, 31, 58, 0.92)');
+        grad.addColorStop(1, '#0B1F3A');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, targetH - bannerH, targetW, bannerH);
+
+        // Accent Line
+        ctx.fillStyle = '#16B9E8';
+        ctx.fillRect(pad, targetH - bannerH + 40, 70, 4);
+
+        // Short Title Wrap
+        const titleText = (currentCampaign.analysis.title || 'Technical Extrusion Engineering Guide').slice(0, 90);
+        ctx.fillStyle = '#FFFFFF';
+        const fontSize = Math.max(22, Math.round(targetW * 0.03));
+        ctx.font = `bold ${fontSize}px Inter, sans-serif`;
+        wrapCanvasText(ctx, titleText, pad, targetH - bannerH + 85, targetW - (pad * 2), fontSize * 1.3);
+      }
+
+      return canvas.toDataURL('image/png');
     }
 
     function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
-      const words = (text || '').split(' ');
+      const words = text.split(' ');
       let line = '';
       let curY = y;
+      let count = 0;
       for (let n = 0; n < words.length; n++) {
         const testLine = line + words[n] + ' ';
         const metrics = ctx.measureText(testLine);
         if (metrics.width > maxWidth && n > 0) {
-          ctx.fillText(line, x, curY);
+          ctx.fillText(line.trim(), x, curY);
           line = words[n] + ' ';
           curY += lineHeight;
+          count++;
+          if (count >= 2) break;
         } else {
           line = testLine;
         }
       }
-      ctx.fillText(line, x, curY);
+      if (count < 2 && line) ctx.fillText(line.trim(), x, curY);
     }
 
-    function downloadActiveCanvas() {
-      const canvas = document.getElementById('promoCanvas');
-      const a = document.createElement('a');
-      a.download = `extrusionpedia-${currentCampaign.cropMode}-${Date.now()}.png`;
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-      showToast('Image downloaded successfully.');
+    function loadImageElement(src) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.src = src;
+      });
     }
 
-    async function copyActiveCanvasToClipboard() {
-      const canvas = document.getElementById('promoCanvas');
-      try {
-        canvas.toBlob(async blob => {
-          await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-          showToast('Image copied to clipboard!');
-        });
-      } catch (e) {
-        downloadActiveCanvas();
-        showToast('Direct image copy unsupported; image downloaded.');
+    window.recompositeActiveImage = async function () {
+      await buildAllPlatformCrops();
+      renderPublishingQueueCards();
+    };
+
+    window.applyImageCropPreset = function (ratio) {
+      currentCampaign.activeCropRatio = ratio;
+      const dataUrl = currentCampaign.platformCrops[ratio] || currentCampaign.rawBaseImageDataUrl;
+      if (dataUrl) {
+        currentCampaign.activeCompositeDataUrl = dataUrl;
+        const imgEl = document.getElementById('promotional-image-el');
+        if (imgEl) imgEl.src = dataUrl;
       }
+
+      const labels = {
+        '16:9': 'Crop: 16:9 Landscape (1200x675 PNG)',
+        '1:1': 'Crop: 1:1 Square (1080x1080 PNG)',
+        '2:3': 'Crop: 2:3 Vertical Pin (1000x1500 PNG)'
+      };
+      const labelEl = document.getElementById('image-aspect-label');
+      if (labelEl) labelEl.textContent = labels[ratio] || '';
+
+      ['16:9', '1:1', '2:3'].forEach(r => {
+        const btn = document.getElementById(`crop-btn-${r.replace(':', '-')}`);
+        if (!btn) return;
+        if (r === ratio) {
+          btn.className = 'crop-preset-btn px-3 py-2 rounded-lg text-xs font-bold border border-ep-blue bg-ep-blue text-white transition flex flex-col items-center';
+        } else {
+          btn.className = 'crop-preset-btn px-3 py-2 rounded-lg text-xs font-bold border border-slate-300 bg-white text-ep-dark hover:border-ep-blue transition flex flex-col items-center';
+        }
+      });
+    };
+
+    window.downloadActiveImage = function (platformOrRatio = 'general') {
+      let targetDataUrl = currentCampaign.activeCompositeDataUrl;
+      let suffix = currentCampaign.activeCropRatio.replace(':', 'x');
+
+      if (PLATFORM_METADATA[platformOrRatio]) {
+        const recRatio = PLATFORM_METADATA[platformOrRatio].recommendedCrop;
+        targetDataUrl = currentCampaign.platformCrops[recRatio] || currentCampaign.activeCompositeDataUrl;
+        suffix = `${platformOrRatio}-${recRatio.replace(':', 'x')}`;
+      }
+
+      if (!targetDataUrl) {
+        showToast('Image not ready to download.', 'error');
+        return;
+      }
+
+      const a = document.createElement('a');
+      a.href = targetDataUrl;
+      a.download = `extrusionpedia-promo-${suffix}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast('Image downloaded successfully!', 'success');
+    };
+
+    window.copyActiveImageToClipboard = async function () {
+      const dataUrl = currentCampaign.activeCompositeDataUrl;
+      if (!dataUrl) {
+        showToast('No image available to copy.', 'error');
+        return;
+      }
+      try {
+        const res = await fetch(dataUrl);
+        const blob = await res.blob();
+        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+        showToast('Image copied to clipboard!', 'success');
+      } catch (e) {
+        downloadActiveImage('general');
+        showToast('Clipboard copy restricted; downloaded image file instead.', 'info');
+      }
+    };
+
+    // Queue & Platform Cards
+    function renderPublishingQueueCards() {
+      const queueSec = document.getElementById('publishing-queue-section');
+      const container = document.getElementById('platform-cards-container');
+      queueSec.classList.remove('hidden');
+
+      const enabledList = PLATFORM_ORDER.filter(p => userSettings.enabledPlatforms[p]);
+      let publishedCount = 0;
+      enabledList.forEach(p => { if (currentCampaign.posts[p]?.published) publishedCount++; });
+
+      const badge = document.getElementById('published-counter-badge');
+      if (badge) badge.textContent = `${publishedCount} / ${enabledList.length} Published`;
+
+      container.innerHTML = enabledList.map((p, idx) => buildSinglePlatformCardHtml(p, idx + 1)).join('');
     }
 
-    // Platform Post Cards & Queue Engine
-    function renderPlatformQueue() {
-      const container = document.getElementById('platformCardsQueue');
-      container.innerHTML = '';
+    function buildSinglePlatformCardHtml(platformKey, stepNumber) {
+      const meta = PLATFORM_METADATA[platformKey];
+      const postData = currentCampaign.posts[platformKey] || {};
+      const isPublished = Boolean(postData.published);
+      const cropRatio = meta.recommendedCrop;
+      const previewImgSrc = currentCampaign.platformCrops[cropRatio] || currentCampaign.activeCompositeDataUrl || '';
 
-      PLATFORM_CONFIGS.forEach(platform => {
-        const isEnabled = localStorage.getItem(`ep_enable_${platform.id}`) !== 'false';
-        if (!isEnabled) return;
+      const captionText = postData.caption || '';
+      const charCount = platformKey === 'x' ? calculateXEffectiveLength(captionText) : captionText.length;
+      const isOverLimit = charCount > meta.charLimit;
 
-        let postCaption = currentCampaign.captions[platform.id] || '';
-        
-        // Link append for non-Instagram if missing
-        if (platform.id !== 'instagram' && currentCampaign.articleUrl && !postCaption.includes(currentCampaign.articleUrl)) {
-          postCaption += `\n\nRead the full article on ExtrusionPedia:\n${currentCampaign.articleUrl}`;
-        }
+      const destinationInfo = getPlatformDestinationDetails(platformKey);
 
-        const isPublished = !!currentCampaign.publishedStatus[platform.id];
-        const destUrl = localStorage.getItem(`ep_dest_${platform.id}`) || platform.defaultUrl;
-
-        const card = document.createElement('div');
-        card.className = 'card platform-card';
-        card.id = `card-${platform.id}`;
-        card.style.borderLeftColor = platform.badgeColor;
-
-        card.innerHTML = `
-          <div class="platform-header">
-            <div class="platform-identity">
-              <span class="platform-badge" style="background: ${platform.badgeColor};">${platform.name}</span>
-              <span class="platform-name">${platform.name}</span>
+      return `
+        <article id="card-${platformKey}" class="bg-white rounded-xl shadow-sm border-2 ${isPublished ? 'border-emerald-500' : 'border-slate-200'} overflow-hidden transition">
+          <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg ${meta.iconBg} text-white flex items-center justify-center shadow-sm text-lg">
+                <i class="${meta.icon}"></i>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-mono uppercase text-slate-400">Step ${stepNumber}</span>
+                  <h3 class="text-base font-extrabold text-ep-navy">${meta.name}</h3>
+                  ${isPublished ? '<span class="text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-check"></i> Published</span>' : ''}
+                </div>
+                <p class="text-xs text-slate-500 mt-0.5">${meta.urlSupportNote}</p>
+              </div>
             </div>
-            <span class="platform-counter" id="counter-${platform.id}">${calculatePlatformLength(platform.id, postCaption)}</span>
-          </div>
 
-          ${platform.note ? `<div class="platform-note">💡 ${platform.note}</div>` : ''}
-
-          <textarea class="caption-editor" id="editor-${platform.id}" oninput="handleCaptionInput('${platform.id}')">${postCaption}</textarea>
-
-          <div class="platform-actions">
-            <button class="btn-action" onclick="copyPlatformPost('${platform.id}')">📋 Copy Post Text</button>
-            <button class="btn-action" onclick="copyArticleUrl()">🔗 Copy Article Link</button>
-            <button class="btn-action" onclick="downloadActiveCanvas()">⬇️ Download Image</button>
-            <button class="btn-action btn-open-platform" onclick="openPlatformDestination('${destUrl}', '${platform.name}')">🚀 Open ${platform.name}</button>
-            <button class="btn-action btn-published-toggle ${isPublished ? 'is-published' : ''}" id="btn-pub-${platform.id}" onclick="togglePlatformPublished('${platform.id}')">
-              ${isPublished ? '✓ Published' : 'Mark as Published'}
+            <button onclick="togglePlatformPublishedStatus('${platformKey}')" class="px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2 border ${isPublished ? 'bg-emerald-600 text-white' : 'bg-white text-ep-dark border-slate-300 hover:border-emerald-500'}">
+              <i class="fa-solid ${isPublished ? 'fa-check-double' : 'fa-square-check'}"></i>
+              <span>${isPublished ? 'Published (Click to undo)' : 'Mark as Published'}</span>
             </button>
           </div>
-        `;
 
-        container.appendChild(card);
-      });
+          <div class="p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-8 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                  <label class="text-xs font-bold uppercase tracking-wider text-ep-navy">Prepared Caption (Editable)</label>
+                  <span id="char-count-${platformKey}" class="text-xs font-mono ${isOverLimit ? 'text-red-600 font-bold' : 'text-slate-500'}">
+                    ${charCount} / ${meta.charLimit} chars
+                  </span>
+                </div>
+                <textarea
+                  id="textarea-${platformKey}"
+                  rows="${platformKey === 'x' ? '4' : '6'}"
+                  oninput="handleCaptionInput('${platformKey}', this.value)"
+                  class="w-full p-3.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-ep-cyan text-sm text-ep-dark leading-relaxed font-sans"
+                >${escapeHtml(captionText)}</textarea>
+              </div>
 
-      document.getElementById('publishingQueueWrapper').style.display = 'block';
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
+                <button onclick="copyPlatformPostText('${platformKey}')" class="bg-ep-blue hover:bg-ep-navy text-white font-semibold py-2.5 px-3 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+                  <i class="fa-regular fa-copy"></i> Copy Post Text
+                </button>
+                <button onclick="copyArticleUrl()" class="bg-ep-gray hover:bg-slate-200 text-ep-navy border border-slate-300 font-semibold py-2.5 px-3 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-link"></i> Copy Link
+                </button>
+                <button onclick="downloadActiveImage('${platformKey}')" class="bg-ep-gray hover:bg-slate-200 text-ep-navy border border-slate-300 font-semibold py-2.5 px-3 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-download"></i> Download Image
+                </button>
+                <button onclick="openPlatformDestination('${platformKey}')" class="bg-ep-navy hover:bg-ep-cyan hover:text-ep-navy text-white font-bold py-2.5 px-3 rounded-lg text-xs sm:text-sm transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i> Open ${meta.name}
+                </button>
+              </div>
+            </div>
+
+            <div class="lg:col-span-4 bg-ep-gray rounded-xl p-4 border border-slate-200 flex flex-col justify-between space-y-2">
+              <div>
+                <div class="flex items-center justify-between text-xs font-bold text-ep-navy mb-2">
+                  <span>Platform Crop</span>
+                  <span class="font-mono text-[11px] text-ep-blue">${meta.cropLabel}</span>
+                </div>
+                <div class="bg-ep-navy rounded-lg overflow-hidden border border-slate-300 flex items-center justify-center h-44">
+                  ${previewImgSrc ? `<img src="${previewImgSrc}" alt="${meta.name} Crop" class="max-h-full max-w-full object-contain" />` : ''}
+                </div>
+              </div>
+              <p class="text-[11px] text-slate-500 bg-white p-2 rounded border border-slate-200">
+                Click <em>Open ${meta.name}</em> &rarr; paste the copied caption &rarr; upload the downloaded image.
+              </p>
+            </div>
+          </div>
+        </article>
+      `;
     }
 
-    function calculatePlatformLength(platformId, text) {
-      if (platformId === 'twitter') {
-        // X counts any URL as 23 characters (t.co)
-        const urlRegex = /(https?:\/\/[^\s]+)/g;
-        const stripped = text.replace(urlRegex, '');
-        const urlCount = (text.match(urlRegex) || []).length;
-        const total = stripped.length + (urlCount * 23);
-        return `${total} / 280 chars (t.co scaled)`;
-      }
-      return `${text.length} characters`;
+    function calculateXEffectiveLength(text) {
+      if (!text) return 0;
+      const urlRegex = /https?:\/\/[^\s]+/g;
+      const urls = text.match(urlRegex) || [];
+      const textWithoutUrls = text.replace(urlRegex, '');
+      return textWithoutUrls.length + urls.length * 23;
     }
 
-    function handleCaptionInput(platformId) {
-      const text = document.getElementById(`editor-${platformId}`).value;
-      currentCampaign.captions[platformId] = text;
-      
-      const counterEl = document.getElementById(`counter-${platformId}`);
-      counterEl.innerText = calculatePlatformLength(platformId, text);
+    window.handleCaptionInput = function (platformKey, val) {
+      if (!currentCampaign.posts[platformKey]) return;
+      currentCampaign.posts[platformKey].caption = val;
+      const meta = PLATFORM_METADATA[platformKey];
+      const count = platformKey === 'x' ? calculateXEffectiveLength(val) : val.length;
+      const el = document.getElementById(`char-count-${platformKey}`);
+      if (el) el.textContent = `${count} / ${meta.charLimit} chars`;
+    };
 
-      if (platformId === 'twitter') {
-        const val = parseInt(counterEl.innerText);
-        if (val > 280) counterEl.className = 'platform-counter danger';
-        else if (val > 250) counterEl.className = 'platform-counter warning';
-        else counterEl.className = 'platform-counter';
-      }
-    }
+    window.copyPlatformPostText = function (platformKey) {
+      const text = currentCampaign.posts[platformKey]?.caption || '';
+      copyTextValue(text, `${PLATFORM_METADATA[platformKey].name} Post Text`);
+    };
 
-    function copyPlatformPost(platformId) {
-      const text = document.getElementById(`editor-${platformId}`).value;
+    window.copyArticleUrl = function () {
+      copyTextValue(currentCampaign.articleUrl, 'Article URL');
+    };
+
+    window.copyTextValue = function (text, label) {
       navigator.clipboard.writeText(text).then(() => {
-        showToast(`${platformId.toUpperCase()} caption copied to clipboard!`);
+        showToast(`${label} copied!`, 'success');
+      }).catch(() => {
+        showToast(`Failed to copy.`, 'error');
       });
-    }
+    };
 
-    function copyArticleUrl() {
-      const url = currentCampaign.articleUrl || document.getElementById('articleUrlInput').value.trim();
-      navigator.clipboard.writeText(url).then(() => {
-        showToast('Article URL copied to clipboard!');
-      });
-    }
+    function getPlatformDestinationDetails(platformKey) {
+      const pageUrl = userSettings.accountUrls[platformKey] || '';
+      const mode = userSettings.openModes[platformKey] || 'page';
+      const encodedUrl = encodeURIComponent(currentCampaign.articleUrl);
 
-    function openPlatformDestination(url, platformName) {
-      if (!url) {
-        alert('No URL configured for this platform. Please check Settings.');
-        return;
+      if (platformKey === 'facebook') {
+        return { targetUrl: mode === 'composer' ? `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` : pageUrl };
       }
-      window.open(url, '_blank', 'noopener,noreferrer');
-      showToast(`Opening ${platformName}. Paste your copied text and upload your image.`);
+      if (platformKey === 'linkedin') {
+        return { targetUrl: mode === 'composer' ? `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` : pageUrl };
+      }
+      if (platformKey === 'pinterest') {
+        return { targetUrl: mode === 'composer' ? `https://www.pinterest.com/pin-builder/?url=${encodedUrl}` : pageUrl };
+      }
+      if (platformKey === 'x') {
+        return { targetUrl: mode === 'composer' ? `https://x.com/intent/post` : pageUrl };
+      }
+      return { targetUrl: pageUrl };
     }
 
-    function togglePlatformPublished(platformId) {
-      const isNow = !currentCampaign.publishedStatus[platformId];
-      currentCampaign.publishedStatus[platformId] = isNow;
-
-      const btn = document.getElementById(`btn-pub-${platformId}`);
-      if (isNow) {
-        btn.classList.add('is-published');
-        btn.innerText = '✓ Published';
-      } else {
-        btn.classList.remove('is-published');
-        btn.innerText = 'Mark as Published';
+    window.openPlatformDestination = function (platformKey) {
+      const details = getPlatformDestinationDetails(platformKey);
+      if (details.targetUrl) {
+        window.open(details.targetUrl, '_blank', 'noopener,noreferrer');
       }
+    };
 
-      saveCurrentCampaignToStorage(false);
-      showToast(`${platformId.toUpperCase()} status updated.`);
-    }
+    window.togglePlatformPublishedStatus = function (platformKey) {
+      if (!currentCampaign.posts[platformKey]) return;
+      currentCampaign.posts[platformKey].published = !currentCampaign.posts[platformKey].published;
+      renderPublishingQueueCards();
+      renderChecklist();
+    };
 
-    // Persistence & Campaign Storage
-    function getStoredCampaigns() {
-      try {
-        return JSON.parse(localStorage.getItem('ep_saved_campaigns') || '[]');
-      } catch (e) {
-        return [];
-      }
-    }
+    function renderChecklist() {
+      const listEl = document.getElementById('progress-checklist');
+      if (!listEl) return;
+      const items = [
+        { key: 'articleRetrieved', label: 'Article retrieved' },
+        { key: 'contentGenerated', label: 'Content generated' },
+        { key: 'imageGenerated', label: 'Image generated' },
+        { key: 'facebookReady', label: 'Facebook ready', platform: 'facebook' },
+        { key: 'linkedinReady', label: 'LinkedIn ready', platform: 'linkedin' },
+        { key: 'instagramReady', label: 'Instagram ready', platform: 'instagram' },
+        { key: 'pinterestReady', label: 'Pinterest ready', platform: 'pinterest' },
+        { key: 'xReady', label: 'X post ready', platform: 'x' }
+      ];
 
-    function saveCurrentCampaignToStorage(showNotice = true) {
-      if (!currentCampaign.title) return;
-      const list = getStoredCampaigns();
-      const existingIdx = list.findIndex(c => c.id === currentCampaign.id || (c.normalizedUrl && c.normalizedUrl === currentCampaign.normalizedUrl));
-      
-      if (existingIdx >= 0) {
-        list[existingIdx] = currentCampaign;
-      } else {
-        list.unshift(currentCampaign);
-      }
+      listEl.innerHTML = items.map(item => {
+        const isEnabled = !item.platform || userSettings.enabledPlatforms[item.platform];
+        const isDone = Boolean(currentCampaign.checklist[item.key]) && isEnabled;
+        const isPub = item.platform && currentCampaign.posts[item.platform]?.published;
 
-      // Keep up to 20 campaigns
-      if (list.length > 20) list.pop();
+        if (!isEnabled) {
+          return `<li class="flex items-center justify-between text-slate-400 line-through"><span>${item.label}</span><span class="text-[10px]">Disabled</span></li>`;
+        }
 
-      localStorage.setItem('ep_saved_campaigns', JSON.stringify(list));
-      if (showNotice) showToast('Campaign saved securely to your browser storage.');
-    }
-
-    function renderCampaignsList() {
-      const container = document.getElementById('campaignsContainer');
-      const list = getStoredCampaigns();
-      container.innerHTML = '';
-
-      if (list.length === 0) {
-        container.innerHTML = '<div style="color: var(--muted-text); padding: 20px; text-align: center;">No saved campaigns yet.</div>';
-        return;
-      }
-
-      list.forEach(c => {
-        const item = document.createElement('div');
-        item.className = 'saved-item';
-        item.innerHTML = `
-          <div>
-            <div class="saved-item-title">${c.title}</div>
-            <div class="saved-item-meta">${new Date(c.date).toLocaleDateString()} — Topic: ${c.topic}</div>
-          </div>
-          <div class="saved-item-actions">
-            <button class="btn-action" style="font-size: 0.8rem;" onclick='restoreCampaignById("${c.id}")'>Restore</button>
-            <button class="btn-action" style="font-size: 0.8rem; color: var(--danger);" onclick='deleteCampaignById("${c.id}")'>Delete</button>
-          </div>
+        return `
+          <li class="flex items-center justify-between ${isDone ? 'text-ep-navy font-semibold' : 'text-slate-500'}">
+            <span class="flex items-center gap-2">
+              <i class="fa-solid ${isDone ? 'fa-circle-check text-emerald-500' : 'fa-regular fa-circle text-slate-300'}"></i>
+              <span>${item.label}</span>
+            </span>
+            ${isPub ? '<span class="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold">Published</span>' : (isDone ? '<span class="text-[10px] text-ep-blue font-bold">Ready</span>' : '')}
+          </li>
         `;
-        container.appendChild(item);
-      });
+      }).join('');
     }
 
-    function restoreCampaignById(id) {
-      const list = getStoredCampaigns();
-      const target = list.find(c => c.id === id);
-      if (target) restoreCampaign(target);
+    function renderAnalysisSummary() {
+      document.getElementById('analysis-section').classList.remove('hidden');
+      document.getElementById('extraction-method-badge').textContent = currentCampaign.retrievalMethod;
+      document.getElementById('summary-title').textContent = currentCampaign.analysis.title;
+      document.getElementById('summary-topic').textContent = currentCampaign.analysis.mainTopic;
+      document.getElementById('summary-audience').textContent = currentCampaign.analysis.intendedAudience;
+      document.getElementById('summary-benefit').textContent = currentCampaign.analysis.mainBenefit;
+      document.getElementById('summary-takeaway').textContent = currentCampaign.analysis.takeawayQuestion;
+
+      document.getElementById('summary-keypoints').innerHTML = (currentCampaign.analysis.keyPoints || []).map(p => `<li>${escapeHtml(p)}</li>`).join('');
+      document.getElementById('summary-keywords').innerHTML = (currentCampaign.analysis.keywords || []).map(k => `<span class="text-xs bg-ep-navy/10 text-ep-navy px-2 py-0.5 rounded font-medium">#${escapeHtml(k.replace(/^#/, ''))}</span>`).join('');
+      
+      const link = document.getElementById('summary-url');
+      link.href = currentCampaign.articleUrl;
+      link.textContent = currentCampaign.articleUrl;
     }
 
-    function restoreCampaign(campaign) {
-      currentCampaign = campaign;
-      document.getElementById('articleUrlInput').value = campaign.articleUrl || '';
-      displayAnalysisSummary();
-      switchImageCrop(campaign.cropMode || 'landscape');
-      renderPlatformQueue();
-      closeCampaignHistoryModal();
+    window.toggleManualInputSection = function () {
+      const container = document.getElementById('manual-input-container');
+      const chevron = document.getElementById('manual-chevron');
+      container.classList.toggle('hidden');
+      chevron.classList.toggle('rotate-180');
+    };
 
-      updateProgressStep('chk-fetch', true);
-      updateProgressStep('chk-content', true);
-      updateProgressStep('chk-visual', true);
-      updateProgressStep('chk-platforms', true);
+    window.loadSampleArticleUrl = function () {
+      document.getElementById('article-url-input').value = 'https://extrusionpedia.com/xps-foam-extrusion-die-lip-build-up-troubleshooting/';
+      document.getElementById('manual-title-input').value = 'Preventing Die Lip Build-Up and Surface Tear in XPS Foam Extrusion';
+      document.getElementById('manual-content-input').value = `Extruded polystyrene (XPS) insulation board manufacturing requires precise thermal and rheological control at the exit die land.
+Root Causes of Die Lip Build-up:
+1. Low molecular weight polymer degradation and talc nucleator plate-out under high shear rates.
+2. Premature foaming inside the die when pressure drops below blowing agent saturation levels.
+3. Cold or uneven die lip temperature distribution causing drag and edge tearing.
+Solutions: Polish die lips with non-abrasive brass tools, optimize extruder barrel cooling zones, and adjust haul-off line speed to maintain exit-plane nucleation.`;
+      showToast('Loaded sample article data.', 'info');
+    };
 
-      showToast(`Restored campaign: ${campaign.title}`);
+    window.resetWorkspace = function () {
+      document.getElementById('article-url-input').value = '';
+      document.getElementById('manual-title-input').value = '';
+      document.getElementById('manual-content-input').value = '';
+      document.getElementById('analysis-section').classList.add('hidden');
+      document.getElementById('image-section').classList.add('hidden');
+      document.getElementById('publishing-queue-section').classList.add('hidden');
+      currentCampaign.checklist = { articleRetrieved: false, contentGenerated: false, imageGenerated: false, facebookReady: false, linkedinReady: false, instagramReady: false, pinterestReady: false, xReady: false };
+      renderChecklist();
+      updateStatusPill('Idle', 'bg-white/10 text-slate-200');
+      showToast('Workspace reset.', 'info');
+    };
+
+    function updateStatusPill(text, classes) {
+      const el = document.getElementById('campaign-status-pill');
+      if (el) { el.textContent = text; el.className = `text-[11px] font-mono px-2.5 py-0.5 rounded-full ${classes}`; }
     }
 
-    function deleteCampaignById(id) {
-      let list = getStoredCampaigns();
-      list = list.filter(c => c.id !== id);
-      localStorage.setItem('ep_saved_campaigns', JSON.stringify(list));
-      renderCampaignsList();
-      showToast('Campaign deleted.');
+    window.showToast = function (msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-3 rounded-lg shadow-xl text-white text-xs font-semibold pointer-events-auto flex items-center justify-between gap-3 ${type === 'success' ? 'bg-emerald-600' : type === 'error' ? 'bg-red-600' : type === 'warning' ? 'bg-amber-600' : 'bg-ep-navy'}`;
+      toast.innerHTML = `<span>${escapeHtml(msg)}</span><button onclick="this.parentElement.remove()">&times;</button>`;
+      container.appendChild(toast);
+      setTimeout(() => { if (toast.parentElement) toast.remove(); }, 3800);
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    function clearAllCampaigns() {
-      if (confirm('Are you sure you want to delete all saved campaigns?')) {
-        localStorage.removeItem('ep_saved_campaigns');
-        renderCampaignsList();
-        showToast('All campaigns cleared.');
-      }
-    }
+    window.onload = function () {
+      loadPersistedSettings();
+      renderChecklist();
+    };
   </script>
 </body>
 </html>
